@@ -4,7 +4,9 @@ import { renderMarkdown } from "./../markdown";
 import { useHub } from "./../store";
 
 export default function ChatPane() {
-  const { chat, streaming, chatBusy, addUserMessage, setChatBusy } = useHub();
+  const { chat, streaming, chatBusy, addUserMessage, setChatBusy, workflows, teams } = useHub();
+  const gate = workflows.find((w) => w.state.startsWith("awaiting"));
+  const gateTeam = gate ? teams.find((t) => t.id === gate.teamId)?.name : null;
   const [input, setInput] = useState("");
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -31,7 +33,12 @@ export default function ChatPane() {
 
   return (
     <section className="panel chat">
-      <h2>Main agent</h2>
+      <h2>CEO</h2>
+      {gate && (
+        <p className="gate-banner">
+          ⏸ {gateTeam ?? gate.teamId} is waiting on you — your next message answers them
+        </p>
+      )}
       <div className="messages">
         {chat.map((m, i) => (
           <div key={i} className={`msg ${m.role}`}>
@@ -62,7 +69,7 @@ export default function ChatPane() {
               void send();
             }
           }}
-          placeholder="Ask the main agent — it can consult your project experts"
+          placeholder={gate ? "Reply to the waiting team…" : "Talk to your CEO — it consults project experts and runs your teams"}
           rows={2}
         />
         <button type="submit" disabled={chatBusy || !input.trim()}>

@@ -8,7 +8,8 @@
     "dev": "concurrently -n server,web -c blue,green \"pnpm --filter @colony/server dev\" \"pnpm --filter @colony/web dev\"",
     "build": "pnpm --filter @colony/shared build && pnpm --filter @colony/web build && pnpm --filter @colony/server build",
     "start": "pnpm --filter @colony/server start",
-    "check": "pnpm -r check && pnpm audit --prod || true"
+    "check": "pnpm -r check && pnpm audit --prod || true",
+    "desktop": "pnpm --filter @colony/web build && pnpm --filter @colony/desktop start"
   },
   "devDependencies": {
     "concurrently": "^9.1.2",
@@ -20,7 +21,8 @@
   "pnpm": {
     "onlyBuiltDependencies": [
       "esbuild",
-      "@anthropic-ai/claude-agent-sdk"
+      "@anthropic-ai/claude-agent-sdk",
+      "electron"
     ]
   },
   "packageManager": "pnpm@10.33.2+sha512.a90faf6feeab71ad6c6e57f94e0fe1a12f5dcc22cd754db40ae9593eb6a3e0b6b12e3540218bb37ae083404b1f2ce6db2a4121e979829b4aff94b99f49da1cf8"

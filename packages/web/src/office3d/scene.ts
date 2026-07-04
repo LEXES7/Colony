@@ -389,7 +389,7 @@ export function buildOfficeScene(inputs: SceneInputs): OfficeScene {
 
   rooms.set(
     "main",
-    buildRoom(root, layout.main, [{ agentKey: "main", shirt: "#5a4632", tag: null, isBoss: true }], "MAIN AGENT")
+    buildRoom(root, layout.main, [{ agentKey: "main", shirt: "#5a4632", tag: null, isBoss: true }], "CEO")
   );
 
   const projectsByName = new Map(inputs.projects.map((p) => [p.name, p]));

@@ -59,9 +59,16 @@ export const api = {
 
   // teams & tasks
   listTeams: () =>
-    request<{ teams: import("@colony/shared").TeamPublic[]; tasks: import("@colony/shared").TaskPublic[] }>(
-      "/api/teams"
-    ),
+    request<{
+      teams: import("@colony/shared").TeamPublic[];
+      tasks: import("@colony/shared").TaskPublic[];
+      workflows: import("@colony/shared").WorkflowPublic[];
+    }>("/api/teams"),
+  startWorkflow: (teamId: string, prompt: string) =>
+    request<import("@colony/shared").WorkflowPublic>(`/api/teams/${teamId}/workflow`, {
+      method: "POST",
+      body: JSON.stringify({ prompt }),
+    }),
   createTeam: (body: {
     name: string;
     path: string;

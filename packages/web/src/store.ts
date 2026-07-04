@@ -1,5 +1,12 @@
 import { create } from "zustand";
-import type { HubEvent, ProjectPublic, TaskPublic, TeamPublic, Usage } from "@colony/shared";
+import type {
+  HubEvent,
+  ProjectPublic,
+  TaskPublic,
+  TeamPublic,
+  Usage,
+  WorkflowPublic,
+} from "@colony/shared";
 
 export interface ChatMessage {
   role: "user" | "assistant" | "error";
@@ -24,6 +31,7 @@ interface HubState {
   projects: ProjectPublic[];
   teams: TeamPublic[];
   tasks: TaskPublic[];
+  workflows: WorkflowPublic[];
   statuses: Record<string, string>;
   chat: ChatMessage[];
   streaming: string;
@@ -35,7 +43,7 @@ interface HubState {
   setConnected: (c: boolean) => void;
   setConfig: (setupComplete: boolean, workspaceRoot: string | null) => void;
   setProjects: (p: ProjectPublic[]) => void;
-  setTeams: (teams: TeamPublic[], tasks: TaskPublic[]) => void;
+  setTeams: (teams: TeamPublic[], tasks: TaskPublic[], workflows?: WorkflowPublic[]) => void;
   addUserMessage: (text: string) => void;
   setChatBusy: (b: boolean) => void;
   applyEvent: (e: HubEvent) => void;
@@ -52,6 +60,7 @@ export const useHub = create<HubState>((set) => ({
   projects: [],
   teams: [],
   tasks: [],
+  workflows: [],
   statuses: {},
   chat: [],
   streaming: "",
@@ -63,7 +72,8 @@ export const useHub = create<HubState>((set) => ({
   setConnected: (connected) => set({ connected }),
   setConfig: (setupComplete, workspaceRoot) => set({ setupComplete, workspaceRoot }),
   setProjects: (projects) => set({ projects }),
-  setTeams: (teams, tasks) => set({ teams, tasks }),
+  setTeams: (teams, tasks, workflows) =>
+    set((s) => ({ teams, tasks, workflows: workflows ?? s.workflows })),
   addUserMessage: (text) =>
     set((s) => ({ chat: [...s.chat, { role: "user", text, ts: Date.now() }], streaming: "" })),
   setChatBusy: (chatBusy) => set({ chatBusy }),
@@ -97,6 +107,14 @@ export const useHub = create<HubState>((set) => ({
         }
         case "task.deleted":
           return { tasks: s.tasks.filter((t) => t.id !== e.taskId) };
+        case "workflow.updated": {
+          const exists = s.workflows.some((w) => w.id === e.workflow.id);
+          return {
+            workflows: exists
+              ? s.workflows.map((w) => (w.id === e.workflow.id ? e.workflow : w))
+              : [...s.workflows, e.workflow],
+          };
+        }
         case "agent.status":
           return { statuses: { ...s.statuses, [e.agent]: e.status } };
         case "agent.message":

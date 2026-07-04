@@ -58,7 +58,48 @@ export interface ProjectPublic {
   usage: Usage;
 }
 
-export type TeamRole = "pm" | "developer" | "reviewer" | "devops";
+export type TeamRole =
+  | "pm"
+  | "developer"
+  | "reviewer"
+  | "devops"
+  | "architect"
+  | "tester"
+  | "security";
+
+export type WorkflowState =
+  | "questions"
+  | "awaiting_requirements"
+  | "requirements"
+  | "awaiting_req_approval"
+  | "architecture"
+  | "awaiting_arch_approval"
+  | "planning"
+  | "development"
+  | "testing"
+  | "security"
+  | "fixing"
+  | "delivery"
+  | "done"
+  | "failed";
+
+export interface WorkflowLogEntry {
+  ts: number;
+  who: string; // "investor", "ceo", "pm@team", ...
+  text: string;
+}
+
+export interface WorkflowPublic {
+  id: string;
+  teamId: string;
+  prompt: string;
+  state: WorkflowState;
+  gateQuestion: string | null; // set while waiting on the investor
+  requirements: string | null;
+  architecture: string | null;
+  log: WorkflowLogEntry[];
+  createdAt: string;
+}
 
 export interface TeamMemberPublic {
   /** short name unique within the team, e.g. "pm", "dev-1" */

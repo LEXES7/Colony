@@ -2,6 +2,7 @@ import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 import type { AgentManager } from "../agents/agentManager.js";
 import type { TeamManager } from "../agents/teamManager.js";
+import type { WorkflowManager } from "../agents/workflowManager.js";
 import { bus } from "../bus.js";
 import type { HubConfig } from "../config.js";
 import type { Registry } from "../registry.js";
@@ -9,7 +10,7 @@ import { validateProjectPath } from "../security.js";
 
 const memberInput = z.object({
   name: z.string().regex(/^[a-z0-9][a-z0-9-]{0,31}$/),
-  role: z.enum(["pm", "developer", "reviewer", "devops"]),
+  role: z.enum(["pm", "developer", "reviewer", "devops", "architect", "tester", "security"]),
   model: z.string().max(64).nullable().optional(),
 });
 
@@ -17,6 +18,7 @@ export function registerTeamRoutes(
   app: FastifyInstance,
   registry: Registry,
   teams: TeamManager,
+  workflows: WorkflowManager,
   _agents: AgentManager,
   config: HubConfig
 ): void {
@@ -25,7 +27,19 @@ export function registerTeamRoutes(
   app.get("/api/teams", async () => ({
     teams: teams.toPublicTeams(),
     tasks: registry.tasks.map((t) => teams.toPublicTask(t)),
+    workflows: registry.workflows.map((w) => workflows.toPublic(w)),
   }));
+
+  /** Company mode: start the investor→CEO→PM pipeline for a team. */
+  app.post("/api/teams/:id/workflow", async (req, reply) => {
+    const { id } = z.object({ id: z.string() }).parse(req.params);
+    const body = z.object({ prompt: z.string().min(10).max(4000) }).parse(req.body);
+    try {
+      return await workflows.start(id, body.prompt);
+    } catch (err) {
+      return reply.code(409).send({ error: err instanceof Error ? err.message : "failed" });
+    }
+  });
 
   app.post("/api/teams", async (req, reply) => {
     const body = z

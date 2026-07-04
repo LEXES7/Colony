@@ -52,7 +52,7 @@ export default function App() {
         setConfig(cfg.setupComplete, cfg.workspaceRoot);
         setProjects(await api.listProjects());
         const teamData = await api.listTeams();
-        setTeams(teamData.teams, teamData.tasks);
+        setTeams(teamData.teams, teamData.tasks, teamData.workflows);
         connectWs();
         setError(null);
       } catch (e) {

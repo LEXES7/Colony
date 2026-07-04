@@ -1,4 +1,11 @@
-import type { AgentStatus, ProjectPublic, TaskPublic, TeamPublic, Usage } from "./types.js";
+import type {
+  AgentStatus,
+  ProjectPublic,
+  TaskPublic,
+  TeamPublic,
+  Usage,
+  WorkflowPublic,
+} from "./types.js";
 
 export type HubEvent =
   | { type: "chat.delta"; text: string; ts: number }
@@ -20,6 +27,7 @@ export type HubEvent =
   | { type: "registry.updated"; projects: ProjectPublic[]; ts: number }
   | { type: "teams.updated"; teams: TeamPublic[]; ts: number }
   | { type: "task.updated"; task: TaskPublic; ts: number }
-  | { type: "task.deleted"; taskId: string; ts: number };
+  | { type: "task.deleted"; taskId: string; ts: number }
+  | { type: "workflow.updated"; workflow: WorkflowPublic; ts: number };
 
 export type HubEventType = HubEvent["type"];

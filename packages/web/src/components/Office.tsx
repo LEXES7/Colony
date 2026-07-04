@@ -233,7 +233,7 @@ export default function Office({ onSelect, selected }: OfficeProps) {
     }
 
     drawRoom(ctx, layout.main, now, {
-      title: "MAIN AGENT",
+      title: "CEO",
       lit: true,
       selected: selectedRef.current === "main",
       seats: [

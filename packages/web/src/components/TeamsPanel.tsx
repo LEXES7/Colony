@@ -5,10 +5,29 @@ import { useHub } from "./../store";
 
 const ROLE_PRESETS: { name: string; role: TeamRole; label: string }[] = [
   { name: "pm", role: "pm", label: "Project manager" },
+  { name: "architect", role: "architect", label: "Architect" },
   { name: "dev-1", role: "developer", label: "Developer 1" },
   { name: "dev-2", role: "developer", label: "Developer 2" },
   { name: "reviewer", role: "reviewer", label: "PR reviewer" },
+  { name: "tester", role: "tester", label: "QA tester" },
+  { name: "security", role: "security", label: "Security" },
   { name: "devops", role: "devops", label: "DevOps" },
+];
+
+const WF_STEPS: { key: string; label: string }[] = [
+  { key: "questions", label: "PM questions" },
+  { key: "awaiting_requirements", label: "your answers" },
+  { key: "requirements", label: "requirements" },
+  { key: "awaiting_req_approval", label: "your approval" },
+  { key: "architecture", label: "architecture" },
+  { key: "awaiting_arch_approval", label: "green light" },
+  { key: "planning", label: "planning" },
+  { key: "development", label: "development" },
+  { key: "testing", label: "testing" },
+  { key: "security", label: "security" },
+  { key: "fixing", label: "fixes" },
+  { key: "delivery", label: "delivery" },
+  { key: "done", label: "done" },
 ];
 
 function etaBadge(task: TaskPublic, now: number): { text: string; overdue: boolean } {
@@ -28,10 +47,13 @@ function etaBadge(task: TaskPublic, now: number): { text: string; overdue: boole
 }
 
 export default function TeamsPanel() {
-  const { teams, tasks, setTeams } = useHub();
+  const { teams, tasks, workflows, setTeams } = useHub();
   const [name, setName] = useState("");
   const [path, setPath] = useState("");
-  const [picked, setPicked] = useState<Set<string>>(new Set(["pm", "dev-1", "reviewer"]));
+  const [picked, setPicked] = useState<Set<string>>(
+    new Set(["pm", "architect", "dev-1", "dev-2", "reviewer", "tester", "security"])
+  );
+  const [ventures, setVentures] = useState<Record<string, string>>({});
   const [err, setErr] = useState<string | null>(null);
   const [busyBtn, setBusyBtn] = useState<string | null>(null);
   const [goals, setGoals] = useState<Record<string, string>>({});
@@ -138,6 +160,65 @@ export default function TeamsPanel() {
               ))}
             </div>
 
+            {/* company mode: investor → CEO → PM pipeline */}
+            {(() => {
+              const wf = workflows.filter((w) => w.teamId === team.id).slice(-1)[0];
+              const stepIdx = wf ? WF_STEPS.findIndex((s) => s.key === wf.state) : -1;
+              return (
+                <div className="venture">
+                  {!wf || wf.state === "done" || wf.state === "failed" ? (
+                    <div className="goal-row">
+                      <input
+                        value={ventures[team.id] ?? ""}
+                        onChange={(e) => setVentures({ ...ventures, [team.id]: e.target.value })}
+                        placeholder='company mode: "hey, let&apos;s build an ecommerce store"'
+                      />
+                      <button
+                        disabled={busyBtn === `wf-${team.id}` || (ventures[team.id] ?? "").trim().length < 10}
+                        onClick={() =>
+                          void act(`wf-${team.id}`, async () => {
+                            await api.startWorkflow(team.id, ventures[team.id]!.trim());
+                            setVentures({ ...ventures, [team.id]: "" });
+                          })
+                        }
+                      >
+                        Start venture
+                      </button>
+                    </div>
+                  ) : null}
+                  {wf && (
+                    <div className={`wf ${wf.state}`}>
+                      <div className="wf-steps">
+                        {WF_STEPS.map((s, i) => (
+                          <span
+                            key={s.key}
+                            className={
+                              wf.state === "failed"
+                                ? "wf-step failed"
+                                : i < stepIdx
+                                  ? "wf-step past"
+                                  : i === stepIdx
+                                    ? "wf-step now"
+                                    : "wf-step"
+                            }
+                          >
+                            {s.label}
+                          </span>
+                        ))}
+                      </div>
+                      {wf.state.startsWith("awaiting") && (
+                        <p className="wf-gate">⏸ waiting for you — reply in the CEO chat on the left</p>
+                      )}
+                      {wf.log.length > 0 && (
+                        <p className="wf-last">
+                          {wf.log[wf.log.length - 1]!.who}: {wf.log[wf.log.length - 1]!.text.slice(0, 160)}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
             {team.goal ? (
               <p className="goal">🎯 {team.goal}</p>
             ) : null}

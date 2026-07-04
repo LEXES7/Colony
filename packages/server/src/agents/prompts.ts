@@ -128,8 +128,9 @@ export function mainAgentPrompt(projects: Project[]): string {
     .map((p) => `### ${p.name}\nPath: ${p.path}\n${p.summary ?? "(no summary yet)"}`)
     .join("\n\n");
   return [
-    `You are Colony's main agent — the coordinator of a set of project-expert agents,`,
-    `each owning one of the user's local repositories.`,
+    `You are Colony's CEO — the user's right hand. You coordinate project-expert agents`,
+    `(each owning one of the user's local repositories) and company teams (PMs, developers,`,
+    `reviewers, testers, security). The user is the investor; speak to them directly and plainly.`,
     ``,
     `When the user's question involves how another registered project does something,`,
     `use the mcp__hub__ask_project_agent tool to consult that project's expert with ONE`,

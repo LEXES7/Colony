@@ -28,7 +28,7 @@ const projectSchema = z.object({
 
 const memberSchema = z.object({
   name: z.string().regex(/^[a-z0-9][a-z0-9-]{0,31}$/),
-  role: z.enum(["pm", "developer", "reviewer", "devops"]),
+  role: z.enum(["pm", "developer", "reviewer", "devops", "architect", "tester", "security"]),
   model: z.string().nullable().default(null),
   lastSessionId: z.string().nullable().default(null),
   usage: usageSchema.prefault({}),
@@ -61,6 +61,35 @@ const taskSchema = z.object({
   createdAt: z.string(),
 });
 
+const workflowSchema = z.object({
+  id: z.string(),
+  teamId: z.string(),
+  prompt: z.string(),
+  state: z
+    .enum([
+      "questions",
+      "awaiting_requirements",
+      "requirements",
+      "awaiting_req_approval",
+      "architecture",
+      "awaiting_arch_approval",
+      "planning",
+      "development",
+      "testing",
+      "security",
+      "fixing",
+      "delivery",
+      "done",
+      "failed",
+    ])
+    .default("questions"),
+  gateQuestion: z.string().nullable().default(null),
+  requirements: z.string().nullable().default(null),
+  architecture: z.string().nullable().default(null),
+  log: z.array(z.object({ ts: z.number(), who: z.string(), text: z.string() })).default([]),
+  createdAt: z.string(),
+});
+
 const registrySchema = z.object({
   version: z.union([z.literal(1), z.literal(2)]).default(2),
   mainAgent: z
@@ -72,11 +101,13 @@ const registrySchema = z.object({
   projects: z.array(projectSchema).default([]),
   teams: z.array(teamSchema).default([]),
   tasks: z.array(taskSchema).default([]),
+  workflows: z.array(workflowSchema).default([]),
 });
 
 export type TeamMember = z.infer<typeof memberSchema>;
 export type Team = z.infer<typeof teamSchema>;
 export type Task = z.infer<typeof taskSchema>;
+export type Workflow = z.infer<typeof workflowSchema>;
 
 export type RegistryData = z.infer<typeof registrySchema>;
 
@@ -259,6 +290,41 @@ export class Registry {
       const before = data.tasks.length;
       data.tasks = data.tasks.filter((t) => t.id !== id);
       return data.tasks.length !== before;
+    });
+  }
+
+  get workflows(): Workflow[] {
+    return this.data.workflows;
+  }
+
+  findWorkflow(id: string): Workflow | undefined {
+    return this.data.workflows.find((w) => w.id === id);
+  }
+
+  addWorkflow(teamId: string, prompt: string): Workflow {
+    return this.mutate((data) => {
+      const wf: Workflow = {
+        id: crypto.randomUUID().slice(0, 8),
+        teamId,
+        prompt,
+        state: "questions",
+        gateQuestion: null,
+        requirements: null,
+        architecture: null,
+        log: [],
+        createdAt: new Date().toISOString(),
+      };
+      data.workflows.push(wf);
+      return wf;
+    });
+  }
+
+  updateWorkflow(id: string, fn: (wf: Workflow) => void): Workflow {
+    return this.mutate((data) => {
+      const wf = data.workflows.find((w) => w.id === id);
+      if (!wf) throw new Error(`no workflow "${id}"`);
+      fn(wf);
+      return wf;
     });
   }
 

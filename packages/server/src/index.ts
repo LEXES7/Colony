@@ -4,6 +4,7 @@ import fastifyStatic from "@fastify/static";
 import fastifyWebsocket from "@fastify/websocket";
 import { AgentManager } from "./agents/agentManager.js";
 import { TeamManager } from "./agents/teamManager.js";
+import { WorkflowManager } from "./agents/workflowManager.js";
 import { loadConfig, loadToken, webDistDir } from "./config.js";
 import { createHubServer } from "./mcp/hubTools.js";
 import { Registry } from "./registry.js";
@@ -20,6 +21,7 @@ const registry = new Registry();
 const manager = new AgentManager(registry, config);
 manager.setHubServer(createHubServer(registry, manager));
 const teamManager = new TeamManager(registry, config, manager);
+const workflowManager = new WorkflowManager(registry, manager, teamManager);
 
 const app = Fastify({
   logger: { level: "info" },
@@ -32,8 +34,8 @@ await app.register(fastifyWebsocket);
 registerWsRoute(app, token);
 registerConfigRoutes(app, config);
 registerProjectRoutes(app, registry, manager, config);
-registerTeamRoutes(app, registry, teamManager, manager, config);
-registerChatRoutes(app, manager);
+registerTeamRoutes(app, registry, teamManager, workflowManager, manager, config);
+registerChatRoutes(app, manager, workflowManager);
 
 app.get("/api/health", async () => ({ ok: true, name: "colony" }));
 

@@ -80,6 +80,31 @@ Security is the first-class design constraint, not an afterthought:
 
 Per-project model overrides are available in the dashboard.
 
+## Company mode — investor → CEO → the whole org
+
+You are the investor; the main agent is your **CEO**. Type a venture into a team's card — *"hey, let's build an ecommerce store"* — and the pipeline runs:
+
+1. The **PM** studies the repo and sends clarifying questions up through the CEO — they appear in your chat, and your reply goes straight back to the team.
+2. PM drafts the **requirements** → you approve or send feedback.
+3. The **architect** designs the solution (written to `ARCHITECTURE.md`) → you say *"start development"*.
+4. PM breaks the work into ETA'd tasks across the **developers**; every finished task passes the **PR reviewer**.
+5. The **QA tester** traces each requirement through the real code; the **security team** audits for vulnerabilities — findings automatically become fix tasks for the devs, then get re-audited.
+6. The **CEO** inspects the result and hands you the delivery report.
+
+Every gate pauses the pipeline and waits for your chat reply. The Teams tab shows a live step timeline; the office shows who's typing.
+
+## Desktop app
+
+```bash
+pnpm desktop
+```
+
+Builds the dashboard and opens Colony in its own native window (Electron) — it boots the local server itself and shuts it down when you close the window. Same localhost-only security model.
+
+## 3D office
+
+The dashboard defaults to a **3D voxel office** (drag to orbit, scroll to zoom, click a room). Every team gets a room with a desk per member; monitors glow and characters type while agents work; envelopes fly between rooms as agents talk. Toggle to the 2D pixel view any time.
+
 ## Teams — your agent company
 
 Create a **team** on any project folder and staff it with roles: **project manager**, **developers**, **PR reviewer**, **devops**. Then:

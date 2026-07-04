@@ -55,6 +55,12 @@ export function roleShirt(role: string, name: string): string {
       return "#b57edc";
     case "devops":
       return "#d08a2e";
+    case "architect":
+      return "#3aa6a6";
+    case "tester":
+      return "#7a9c3a";
+    case "security":
+      return "#c14b4b";
     default:
       return shirtColor(name);
   }
@@ -68,6 +74,12 @@ export function roleTag(role: string): string {
       return "REV";
     case "devops":
       return "OPS";
+    case "architect":
+      return "ARC";
+    case "tester":
+      return "QA";
+    case "security":
+      return "SEC";
     default:
       return "DEV";
   }
