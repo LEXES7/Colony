@@ -1,0 +1,23 @@
+# dependencies / build
+node_modules/
+dist/
+*.tsbuildinfo
+
+# runtime state — never commit (contains registry, auth token, usage data)
+data/
+
+# env & secrets — never commit
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# editor / os
+.DS_Store
+.idea/
+.vscode/
+.qodo/
+
+# logs
+*.log

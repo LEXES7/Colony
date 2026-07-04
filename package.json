@@ -1,0 +1,25 @@
+{
+  "name": "colony",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Colony — a local, security-first platform for managing a team of project agents",
+  "license": "MIT",
+  "scripts": {
+    "dev": "concurrently -n server,web -c blue,green \"pnpm --filter @colony/server dev\" \"pnpm --filter @colony/web dev\"",
+    "build": "pnpm --filter @colony/shared build && pnpm --filter @colony/web build && pnpm --filter @colony/server build",
+    "start": "node packages/server/dist/index.js",
+    "check": "pnpm -r check && pnpm audit --prod || true"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "@anthropic-ai/claude-agent-sdk"
+    ]
+  }
+}
