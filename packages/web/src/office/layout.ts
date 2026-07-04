@@ -1,11 +1,11 @@
 /** Office floor-plan math, all in tile units (1 tile = 16 logical px). */
 
 export const TILE = 16;
+export const SPINE_X = 2; // vertical hallway spine (2 tiles wide: x=SPINE_X-1..SPINE_X)
 
 export type RoomKind = "main" | "dept" | "team";
 
 export interface Room {
-  /** project name, team id, or "main" */
   id: string;
   kind: RoomKind;
   x: number;
@@ -14,7 +14,6 @@ export interface Room {
   h: number;
   doorX: number;
   doorY: number;
-  /** for team rooms: number of desks */
   seats: number;
 }
 
@@ -24,85 +23,91 @@ export interface OfficeLayout {
   main: Room;
   depts: Room[];
   teamRooms: Room[];
+  /** corridor bands as [yTop, xStart, xEnd] pairs (2 tiles tall each) */
+  corridors: { y: number; x0: number; x1: number }[];
+  spineBottom: number;
 }
 
-const ROOM_W = 12;
 const ROOM_H = 8;
 const MAIN_W = 14;
-const MAIN_H = 7;
-const TEAM_H = 9;
-const CORRIDOR = 2;
+const DEPT_W = 12;
+const GAP = 1;
 const MARGIN = 1;
+const MAX_ROW_W = 42; // tiles — rooms wrap to a new row past this
 
 export interface TeamShape {
   id: string;
   seats: number;
 }
 
-export function computeLayout(projectNames: string[], teams: TeamShape[] = []): OfficeLayout {
-  const perRow = Math.min(3, Math.max(1, projectNames.length || 1));
-  const teamWidths = teams.map((t) => Math.max(ROOM_W, 4 + t.seats * 4));
-  const width =
-    Math.max(perRow * (ROOM_W + 1) - 1, MAIN_W, ...(teamWidths.length ? teamWidths : [0])) +
-    MARGIN * 2;
+interface Pending {
+  id: string;
+  kind: RoomKind;
+  w: number;
+  seats: number;
+}
 
-  const mainX = Math.floor((width - MAIN_W) / 2);
-  const main: Room = {
-    id: "main",
-    kind: "main",
-    x: mainX,
-    y: MARGIN,
-    w: MAIN_W,
-    h: MAIN_H,
-    doorX: mainX + Math.floor(MAIN_W / 2),
-    doorY: MARGIN + MAIN_H - 1,
-    seats: 1,
+export function computeLayout(projectNames: string[], teams: TeamShape[] = []): OfficeLayout {
+  const pending: Pending[] = [
+    { id: "main", kind: "main", w: MAIN_W, seats: 1 },
+    ...projectNames.map<Pending>((name) => ({ id: name, kind: "dept", w: DEPT_W, seats: 1 })),
+    ...teams.map<Pending>((t) => ({
+      id: t.id,
+      kind: "team",
+      w: Math.max(DEPT_W, 4 + t.seats * 4),
+      seats: t.seats,
+    })),
+  ];
+
+  const startX = SPINE_X + 2;
+  const placed: Room[] = [];
+  const corridors: OfficeLayout["corridors"] = [];
+  let x = startX;
+  let y = MARGIN;
+  let rowMaxX = startX;
+  let rowRooms: Room[] = [];
+
+  const closeRow = () => {
+    if (rowRooms.length === 0) return;
+    corridors.push({ y: y + ROOM_H, x0: SPINE_X - 1, x1: rowMaxX });
+    y += ROOM_H + 2 + GAP;
+    x = startX;
+    rowRooms = [];
   };
 
-  const depts: Room[] = [];
-  projectNames.forEach((name, i) => {
-    const row = Math.floor(i / perRow);
-    const col = i % perRow;
-    const inRow = Math.min(perRow, projectNames.length - row * perRow);
-    const rowWidth = inRow * (ROOM_W + 1) - 1;
-    const startX = Math.floor((width - rowWidth) / 2);
-    const x = startX + col * (ROOM_W + 1);
-    const y = MARGIN + MAIN_H + CORRIDOR + row * (ROOM_H + CORRIDOR);
-    depts.push({
-      id: name,
-      kind: "dept",
+  for (const p of pending) {
+    if (x > startX && x + p.w > MAX_ROW_W) closeRow();
+    const room: Room = {
+      id: p.id,
+      kind: p.kind,
       x,
       y,
-      w: ROOM_W,
+      w: p.w,
       h: ROOM_H,
-      doorX: x + Math.floor(ROOM_W / 2),
-      doorY: y,
-      seats: 1,
-    });
-  });
-
-  const deptRows = Math.ceil(projectNames.length / perRow);
-  let teamY = MARGIN + MAIN_H + CORRIDOR + deptRows * (ROOM_H + CORRIDOR);
-  const teamRooms: Room[] = [];
-  for (let i = 0; i < teams.length; i++) {
-    const w = teamWidths[i]!;
-    const x = Math.floor((width - w) / 2);
-    teamRooms.push({
-      id: teams[i]!.id,
-      kind: "team",
-      x,
-      y: teamY,
-      w,
-      h: TEAM_H,
-      doorX: x + Math.floor(w / 2),
-      doorY: teamY,
-      seats: teams[i]!.seats,
-    });
-    teamY += TEAM_H + CORRIDOR;
+      doorX: x + Math.floor(p.w / 2),
+      doorY: y + ROOM_H - 1, // door on the bottom wall, into the corridor
+      seats: p.seats,
+    };
+    placed.push(room);
+    rowRooms.push(room);
+    x += p.w + GAP;
+    rowMaxX = Math.max(rowMaxX, room.x + room.w);
   }
+  closeRow();
 
-  const rows = teamY - CORRIDOR + MARGIN + 1;
-  return { cols: width, rows, main, depts, teamRooms };
+  const spineBottom = corridors.length ? corridors[corridors.length - 1]!.y + 2 : MARGIN;
+  const cols = Math.max(...placed.map((r) => r.x + r.w), SPINE_X + 1) + MARGIN;
+  const rows = y - GAP + MARGIN;
+
+  return {
+    cols,
+    rows,
+    main: placed.find((r) => r.kind === "main")!,
+    depts: placed.filter((r) => r.kind === "dept"),
+    teamRooms: placed.filter((r) => r.kind === "team"),
+    corridors,
+    spineBottom,
+  };
 }
 
 /** X tile (fractional center) of the i-th desk in a room. */
@@ -117,15 +122,16 @@ export interface PathPoint {
   y: number;
 }
 
-/** Corridor path from one room's door to another's (L-shaped via corridors). */
+/** Path between rooms: down into the corridor, across (via the spine when changing rows), up into the target door. */
 export function doorPath(from: Room, to: Room): PathPoint[] {
-  const fromOut = { x: from.doorX + 0.5, y: from.doorY === from.y ? from.y - 1 : from.doorY + 1.5 };
-  const toOut = { x: to.doorX + 0.5, y: to.doorY === to.y ? to.y - 1 : to.doorY + 1.5 };
-  const points: PathPoint[] = [{ x: from.doorX + 0.5, y: from.doorY + 0.5 }, fromOut];
-  if (Math.abs(fromOut.y - toOut.y) > 0.01) {
-    points.push({ x: toOut.x, y: fromOut.y });
+  const fromC = { x: from.doorX + 0.5, y: from.y + from.h + 1 };
+  const toC = { x: to.doorX + 0.5, y: to.y + to.h + 1 };
+  const points: PathPoint[] = [{ x: from.doorX + 0.5, y: from.doorY + 0.5 }, fromC];
+  if (Math.abs(fromC.y - toC.y) > 0.01) {
+    points.push({ x: SPINE_X, y: fromC.y });
+    points.push({ x: SPINE_X, y: toC.y });
   }
-  points.push(toOut);
+  points.push(toC);
   points.push({ x: to.doorX + 0.5, y: to.doorY + 0.5 });
   return points;
 }

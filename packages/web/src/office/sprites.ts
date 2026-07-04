@@ -12,8 +12,27 @@ export function drawSprite(
   palette: Palette,
   x: number,
   y: number,
-  px: number
+  px: number,
+  outline?: string
 ): void {
+  if (outline) {
+    ctx.fillStyle = outline;
+    const o = Math.max(1, px / 2);
+    for (const [dx, dy] of [
+      [-o, 0],
+      [o, 0],
+      [0, -o],
+      [0, o],
+    ] as const) {
+      for (let row = 0; row < grid.length; row++) {
+        const line = grid[row]!;
+        for (let col = 0; col < line.length; col++) {
+          if (line[col] === "." || !palette[line[col]!]) continue;
+          ctx.fillRect(x + col * px + dx, y + row * px + dy, px, px);
+        }
+      }
+    }
+  }
   for (let row = 0; row < grid.length; row++) {
     const line = grid[row]!;
     for (let col = 0; col < line.length; col++) {
