@@ -23,10 +23,17 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   return (await res.json()) as T;
 }
 
+export interface ConfigResponse {
+  workspaceRoot: string | null;
+  setupComplete: boolean;
+  defaults?: { folderModel: string; mainModel: string; maxConsultTurns: number };
+}
+
 export const api = {
   health: () => request<{ ok: boolean }>("/api/health"),
-  getConfig: () =>
-    request<{ workspaceRoot: string | null; setupComplete: boolean }>("/api/config"),
+  getConfig: () => request<ConfigResponse>("/api/config"),
+  patchConfig: (body: { workspaceRoot?: string; folderModel?: string; mainModel?: string }) =>
+    request<{ ok: boolean }>("/api/config", { method: "PATCH", body: JSON.stringify(body) }),
   setWorkspaceRoot: (workspaceRoot: string) =>
     request<{ ok: boolean }>("/api/config", {
       method: "PATCH",

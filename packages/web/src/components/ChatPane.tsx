@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { api } from "./../api";
+import { renderMarkdown } from "./../markdown";
 import { useHub } from "./../store";
 
 export default function ChatPane() {
@@ -34,7 +35,7 @@ export default function ChatPane() {
       <div className="messages">
         {chat.map((m, i) => (
           <div key={i} className={`msg ${m.role}`}>
-            <div className="bubble">{m.text}</div>
+            <div className="bubble">{m.role === "assistant" ? renderMarkdown(m.text) : m.text}</div>
           </div>
         ))}
         {streaming && (

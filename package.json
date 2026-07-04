@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "concurrently -n server,web -c blue,green \"pnpm --filter @colony/server dev\" \"pnpm --filter @colony/web dev\"",
     "build": "pnpm --filter @colony/shared build && pnpm --filter @colony/web build && pnpm --filter @colony/server build",
-    "start": "node packages/server/dist/index.js",
+    "start": "pnpm --filter @colony/server start",
     "check": "pnpm -r check && pnpm audit --prod || true"
   },
   "devDependencies": {

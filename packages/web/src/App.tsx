@@ -4,7 +4,10 @@ import { useHub } from "./store";
 import { connectWs } from "./ws";
 import ActivityFeed from "./components/ActivityFeed";
 import ChatPane from "./components/ChatPane";
+import DeptCard from "./components/DeptCard";
+import Office from "./components/Office";
 import ProjectList from "./components/ProjectList";
+import Settings from "./components/Settings";
 import UsagePanel from "./components/UsagePanel";
 
 /**
@@ -22,11 +25,15 @@ function bootstrapToken(): string | null {
   return sessionStorage.getItem("colony-token");
 }
 
+type Tab = "projects" | "activity" | "usage" | "settings";
+
 export default function App() {
   const { token, setToken, setupComplete, setConfig, setProjects, connected } = useHub();
   const [tokenInput, setTokenInput] = useState("");
   const [rootInput, setRootInput] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [tab, setTab] = useState<Tab>("projects");
+  const [selected, setSelected] = useState<string | null>(null);
 
   useEffect(() => {
     setToken(bootstrapToken());
@@ -85,7 +92,7 @@ export default function App() {
         <h1>Colony — first run</h1>
         <p>
           Set your <strong>workspace root</strong>: the folder that contains your projects.
-          Only folders inside it can be registered as agents.
+          Only folders inside it can be registered.
         </p>
         <form
           onSubmit={async (e) => {
@@ -120,18 +127,29 @@ export default function App() {
       <header>
         <h1>Colony</h1>
         <span className={connected ? "dot on" : "dot off"} title={connected ? "live" : "disconnected"} />
+        <span className="tagline">the office</span>
       </header>
       {error && <p className="error banner">{error}</p>}
-      <div className="columns">
-        <aside>
-          <ProjectList />
-          <UsagePanel />
-        </aside>
-        <main>
+      <div className="columns office-columns">
+        <aside className="chat-side">
           <ChatPane />
+        </aside>
+        <main className="office-main">
+          <Office selected={selected} onSelect={setSelected} />
+          {selected && <DeptCard name={selected} onClose={() => setSelected(null)} />}
         </main>
-        <aside>
-          <ActivityFeed />
+        <aside className="tabs-side">
+          <nav className="tabs">
+            {(["projects", "activity", "usage", "settings"] as Tab[]).map((t) => (
+              <button key={t} className={tab === t ? "tab active" : "tab"} onClick={() => setTab(t)}>
+                {t}
+              </button>
+            ))}
+          </nav>
+          {tab === "projects" && <ProjectList />}
+          {tab === "activity" && <ActivityFeed />}
+          {tab === "usage" && <UsagePanel />}
+          {tab === "settings" && <Settings />}
         </aside>
       </div>
     </div>
