@@ -12,9 +12,35 @@ const fmt = (n: number) => (n >= 1000 ? `${(n / 1000).toFixed(1)}k` : String(n))
 
 /** Floating card shown when a room in the office is clicked. */
 export default function DeptCard({ name, onClose }: { name: string; onClose: () => void }) {
-  const { projects, setProjects, mainUsage } = useHub();
+  const { projects, setProjects, mainUsage, teams, tasks } = useHub();
 
   const refresh = async () => setProjects(await api.listProjects());
+
+  const team = teams.find((t) => t.id === name);
+  if (team) {
+    const board = tasks.filter((t) => t.teamId === team.id);
+    const done = board.filter((t) => t.status === "done").length;
+    return (
+      <div className="dept-card">
+        <div className="dept-head">
+          <h3>⚑ {team.name}</h3>
+          <button className="linklike" onClick={onClose}>✕</button>
+        </div>
+        <p className="path">{team.path}</p>
+        {team.goal && <p className="summary">🎯 {team.goal}</p>}
+        <div className="member-chips">
+          {team.members.map((m) => (
+            <span key={m.name} className={`chip ${m.status}`} title={m.role}>
+              {m.name} · {m.role}
+            </span>
+          ))}
+        </div>
+        <p className="mini-usage">
+          {done}/{board.length} tasks done — manage the board in the Teams tab.
+        </p>
+      </div>
+    );
+  }
 
   if (name === "main") {
     return (

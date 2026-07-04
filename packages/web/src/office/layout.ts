@@ -2,47 +2,61 @@
 
 export const TILE = 16;
 
+export type RoomKind = "main" | "dept" | "team";
+
 export interface Room {
-  /** project name, or "main" for the boss office */
+  /** project name, team id, or "main" */
   id: string;
+  kind: RoomKind;
   x: number;
   y: number;
   w: number;
   h: number;
-  /** door position (tile x, tile y) on the room wall facing a corridor */
   doorX: number;
   doorY: number;
+  /** for team rooms: number of desks */
+  seats: number;
 }
 
 export interface OfficeLayout {
-  cols: number; // canvas width in tiles
-  rows: number; // canvas height in tiles
+  cols: number;
+  rows: number;
   main: Room;
   depts: Room[];
+  teamRooms: Room[];
 }
 
 const ROOM_W = 12;
 const ROOM_H = 8;
-const MAIN_W = 12;
+const MAIN_W = 14;
 const MAIN_H = 7;
+const TEAM_H = 9;
 const CORRIDOR = 2;
 const MARGIN = 1;
 
-export function computeLayout(projectNames: string[]): OfficeLayout {
-  const n = Math.max(projectNames.length, 1);
-  const perRow = Math.min(3, Math.max(1, n));
-  const deptRows = Math.ceil(projectNames.length / perRow) || 1;
+export interface TeamShape {
+  id: string;
+  seats: number;
+}
 
-  const width = Math.max(perRow * (ROOM_W + 1) - 1, MAIN_W) + MARGIN * 2;
+export function computeLayout(projectNames: string[], teams: TeamShape[] = []): OfficeLayout {
+  const perRow = Math.min(3, Math.max(1, projectNames.length || 1));
+  const teamWidths = teams.map((t) => Math.max(ROOM_W, 4 + t.seats * 4));
+  const width =
+    Math.max(perRow * (ROOM_W + 1) - 1, MAIN_W, ...(teamWidths.length ? teamWidths : [0])) +
+    MARGIN * 2;
+
   const mainX = Math.floor((width - MAIN_W) / 2);
   const main: Room = {
     id: "main",
+    kind: "main",
     x: mainX,
     y: MARGIN,
     w: MAIN_W,
     h: MAIN_H,
     doorX: mainX + Math.floor(MAIN_W / 2),
     doorY: MARGIN + MAIN_H - 1,
+    seats: 1,
   };
 
   const depts: Room[] = [];
@@ -56,21 +70,50 @@ export function computeLayout(projectNames: string[]): OfficeLayout {
     const y = MARGIN + MAIN_H + CORRIDOR + row * (ROOM_H + CORRIDOR);
     depts.push({
       id: name,
+      kind: "dept",
       x,
       y,
       w: ROOM_W,
       h: ROOM_H,
       doorX: x + Math.floor(ROOM_W / 2),
-      doorY: y, // door on the top wall, facing the corridor above
+      doorY: y,
+      seats: 1,
     });
   });
 
-  const rows = MARGIN + MAIN_H + CORRIDOR + deptRows * (ROOM_H + CORRIDOR) - CORRIDOR + MARGIN + 1;
-  return { cols: width, rows, main, depts };
+  const deptRows = Math.ceil(projectNames.length / perRow);
+  let teamY = MARGIN + MAIN_H + CORRIDOR + deptRows * (ROOM_H + CORRIDOR);
+  const teamRooms: Room[] = [];
+  for (let i = 0; i < teams.length; i++) {
+    const w = teamWidths[i]!;
+    const x = Math.floor((width - w) / 2);
+    teamRooms.push({
+      id: teams[i]!.id,
+      kind: "team",
+      x,
+      y: teamY,
+      w,
+      h: TEAM_H,
+      doorX: x + Math.floor(w / 2),
+      doorY: teamY,
+      seats: teams[i]!.seats,
+    });
+    teamY += TEAM_H + CORRIDOR;
+  }
+
+  const rows = teamY - CORRIDOR + MARGIN + 1;
+  return { cols: width, rows, main, depts, teamRooms };
+}
+
+/** X tile (fractional center) of the i-th desk in a room. */
+export function seatCenterX(room: Room, i: number): number {
+  const span = room.seats * 4 - 1;
+  const start = room.x + room.w / 2 - span / 2;
+  return start + i * 4 + 1.5;
 }
 
 export interface PathPoint {
-  x: number; // tile coords (fractional ok)
+  x: number;
   y: number;
 }
 
@@ -80,7 +123,6 @@ export function doorPath(from: Room, to: Room): PathPoint[] {
   const toOut = { x: to.doorX + 0.5, y: to.doorY === to.y ? to.y - 1 : to.doorY + 1.5 };
   const points: PathPoint[] = [{ x: from.doorX + 0.5, y: from.doorY + 0.5 }, fromOut];
   if (Math.abs(fromOut.y - toOut.y) > 0.01) {
-    // travel horizontally in the source corridor, then vertically at target x
     points.push({ x: toOut.x, y: fromOut.y });
   }
   points.push(toOut);
@@ -88,9 +130,12 @@ export function doorPath(from: Room, to: Room): PathPoint[] {
   return points;
 }
 
+export function allRooms(layout: OfficeLayout): Room[] {
+  return [layout.main, ...layout.depts, ...layout.teamRooms];
+}
+
 export function roomAt(layout: OfficeLayout, tileX: number, tileY: number): Room | null {
-  const all = [layout.main, ...layout.depts];
-  for (const room of all) {
+  for (const room of allRooms(layout)) {
     if (tileX >= room.x && tileX < room.x + room.w && tileY >= room.y && tileY < room.y + room.h) {
       return room;
     }

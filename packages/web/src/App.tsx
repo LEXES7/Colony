@@ -8,6 +8,7 @@ import DeptCard from "./components/DeptCard";
 import Office from "./components/Office";
 import ProjectList from "./components/ProjectList";
 import Settings from "./components/Settings";
+import TeamsPanel from "./components/TeamsPanel";
 import UsagePanel from "./components/UsagePanel";
 
 /**
@@ -25,10 +26,10 @@ function bootstrapToken(): string | null {
   return sessionStorage.getItem("colony-token");
 }
 
-type Tab = "projects" | "activity" | "usage" | "settings";
+type Tab = "projects" | "teams" | "activity" | "usage" | "settings";
 
 export default function App() {
-  const { token, setToken, setupComplete, setConfig, setProjects, connected } = useHub();
+  const { token, setToken, setupComplete, setConfig, setProjects, setTeams, connected } = useHub();
   const [tokenInput, setTokenInput] = useState("");
   const [rootInput, setRootInput] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -46,6 +47,8 @@ export default function App() {
         const cfg = await api.getConfig();
         setConfig(cfg.setupComplete, cfg.workspaceRoot);
         setProjects(await api.listProjects());
+        const teamData = await api.listTeams();
+        setTeams(teamData.teams, teamData.tasks);
         connectWs();
         setError(null);
       } catch (e) {
@@ -56,7 +59,7 @@ export default function App() {
         }
       }
     })();
-  }, [token, setConfig, setProjects, setToken]);
+  }, [token, setConfig, setProjects, setTeams, setToken]);
 
   if (!token) {
     return (
@@ -140,13 +143,14 @@ export default function App() {
         </main>
         <aside className="tabs-side">
           <nav className="tabs">
-            {(["projects", "activity", "usage", "settings"] as Tab[]).map((t) => (
+            {(["projects", "teams", "activity", "usage", "settings"] as Tab[]).map((t) => (
               <button key={t} className={tab === t ? "tab active" : "tab"} onClick={() => setTab(t)}>
                 {t}
               </button>
             ))}
           </nav>
           {tab === "projects" && <ProjectList />}
+          {tab === "teams" && <TeamsPanel />}
           {tab === "activity" && <ActivityFeed />}
           {tab === "usage" && <UsagePanel />}
           {tab === "settings" && <Settings />}

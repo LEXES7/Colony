@@ -1,4 +1,4 @@
-import type { AgentStatus, ProjectPublic, Usage } from "./types.js";
+import type { AgentStatus, ProjectPublic, TaskPublic, TeamPublic, Usage } from "./types.js";
 
 export type HubEvent =
   | { type: "chat.delta"; text: string; ts: number }
@@ -17,6 +17,9 @@ export type HubEvent =
   | { type: "agent.tool"; agent: string; tool: string; detail?: string; ts: number }
   | { type: "agent.usage"; agent: string; delta: Usage; total: Usage; ts: number }
   | { type: "summary.created"; agent: string; summary: string; ts: number }
-  | { type: "registry.updated"; projects: ProjectPublic[]; ts: number };
+  | { type: "registry.updated"; projects: ProjectPublic[]; ts: number }
+  | { type: "teams.updated"; teams: TeamPublic[]; ts: number }
+  | { type: "task.updated"; task: TaskPublic; ts: number }
+  | { type: "task.deleted"; taskId: string; ts: number };
 
 export type HubEventType = HubEvent["type"];

@@ -200,3 +200,35 @@ const SECRET_FILE_PATTERNS: RegExp[] = [
 export function isSecretFilePath(filePath: string): boolean {
   return SECRET_FILE_PATTERNS.some((re) => re.test(filePath));
 }
+
+/**
+ * For writer roles (developer/devops): every file a tool touches must stay
+ * inside the team's project folder, and secret files stay off-limits. The
+ * file may not exist yet (Write), so we resolve the nearest existing
+ * ancestor for the symlink-escape check.
+ */
+export function isPathInsideJail(filePath: string, jailRoot: string): boolean {
+  if (typeof filePath !== "string" || filePath.length === 0 || filePath.includes("\0")) return false;
+  let realRoot: string;
+  try {
+    realRoot = fs.realpathSync(jailRoot);
+  } catch {
+    return false;
+  }
+  const resolved = path.resolve(realRoot, filePath);
+  // find nearest existing ancestor and realpath it (symlink escape guard)
+  let probe = resolved;
+  while (!fs.existsSync(probe)) {
+    const parent = path.dirname(probe);
+    if (parent === probe) return false;
+    probe = parent;
+  }
+  let realProbe: string;
+  try {
+    realProbe = fs.realpathSync(probe);
+  } catch {
+    return false;
+  }
+  const realResolved = realProbe + resolved.slice(probe.length);
+  return isInside(realResolved, realRoot);
+}

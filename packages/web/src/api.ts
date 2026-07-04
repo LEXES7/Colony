@@ -56,4 +56,27 @@ export const api = {
     request<{ summary: string }>(`/api/projects/${name}/summarize`, { method: "POST", body: "{}" }),
   chat: (message: string) =>
     request<{ text: string }>("/api/chat", { method: "POST", body: JSON.stringify({ message }) }),
+
+  // teams & tasks
+  listTeams: () =>
+    request<{ teams: import("@colony/shared").TeamPublic[]; tasks: import("@colony/shared").TaskPublic[] }>(
+      "/api/teams"
+    ),
+  createTeam: (body: {
+    name: string;
+    path: string;
+    members: { name: string; role: import("@colony/shared").TeamRole; model?: string | null }[];
+  }) => request<{ id: string }>("/api/teams", { method: "POST", body: JSON.stringify(body) }),
+  deleteTeam: (id: string) => request<{ ok: boolean }>(`/api/teams/${id}`, { method: "DELETE" }),
+  planTeam: (id: string, goal: string) =>
+    request<{ summary: string }>(`/api/teams/${id}/plan`, {
+      method: "POST",
+      body: JSON.stringify({ goal }),
+    }),
+  runAll: (id: string) => request<{ ok: boolean }>(`/api/teams/${id}/run-all`, { method: "POST", body: "{}" }),
+  runTask: (id: string) => request<unknown>(`/api/tasks/${id}/run`, { method: "POST", body: "{}" }),
+  reviewTask: (id: string) => request<unknown>(`/api/tasks/${id}/review`, { method: "POST", body: "{}" }),
+  patchTask: (id: string, body: { status?: string; etaMinutes?: number | null; assignee?: string }) =>
+    request<{ ok: boolean }>(`/api/tasks/${id}`, { method: "PATCH", body: JSON.stringify(body) }),
+  deleteTask: (id: string) => request<{ ok: boolean }>(`/api/tasks/${id}`, { method: "DELETE" }),
 };

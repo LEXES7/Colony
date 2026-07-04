@@ -58,6 +58,44 @@ export interface ProjectPublic {
   usage: Usage;
 }
 
+export type TeamRole = "pm" | "developer" | "reviewer" | "devops";
+
+export interface TeamMemberPublic {
+  /** short name unique within the team, e.g. "pm", "dev-1" */
+  name: string;
+  role: TeamRole;
+  model: string | null;
+  status: AgentStatus;
+  usage: Usage;
+}
+
+export interface TeamPublic {
+  id: string;
+  name: string;
+  path: string;
+  goal: string | null;
+  members: TeamMemberPublic[];
+  createdAt: string;
+}
+
+export type TaskStatus = "todo" | "in_progress" | "review" | "changes_requested" | "done" | "blocked";
+
+export interface TaskPublic {
+  id: string;
+  teamId: string;
+  title: string;
+  description: string;
+  assignee: string; // member name
+  status: TaskStatus;
+  etaMinutes: number | null;
+  startedAt: string | null; // ISO; dueAt = startedAt + etaMinutes
+  finishedAt: string | null;
+  result: string | null; // worker's completion summary
+  review: string | null; // reviewer's notes
+  notes: string[]; // progress notes
+  createdAt: string;
+}
+
 export interface HubDefaults {
   folderModel: string;
   mainModel: string;

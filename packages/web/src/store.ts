@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { HubEvent, ProjectPublic, Usage } from "@colony/shared";
+import type { HubEvent, ProjectPublic, TaskPublic, TeamPublic, Usage } from "@colony/shared";
 
 export interface ChatMessage {
   role: "user" | "assistant" | "error";
@@ -22,6 +22,8 @@ interface HubState {
   setupComplete: boolean | null;
   workspaceRoot: string | null;
   projects: ProjectPublic[];
+  teams: TeamPublic[];
+  tasks: TaskPublic[];
   statuses: Record<string, string>;
   chat: ChatMessage[];
   streaming: string;
@@ -33,6 +35,7 @@ interface HubState {
   setConnected: (c: boolean) => void;
   setConfig: (setupComplete: boolean, workspaceRoot: string | null) => void;
   setProjects: (p: ProjectPublic[]) => void;
+  setTeams: (teams: TeamPublic[], tasks: TaskPublic[]) => void;
   addUserMessage: (text: string) => void;
   setChatBusy: (b: boolean) => void;
   applyEvent: (e: HubEvent) => void;
@@ -47,6 +50,8 @@ export const useHub = create<HubState>((set) => ({
   setupComplete: null,
   workspaceRoot: null,
   projects: [],
+  teams: [],
+  tasks: [],
   statuses: {},
   chat: [],
   streaming: "",
@@ -58,6 +63,7 @@ export const useHub = create<HubState>((set) => ({
   setConnected: (connected) => set({ connected }),
   setConfig: (setupComplete, workspaceRoot) => set({ setupComplete, workspaceRoot }),
   setProjects: (projects) => set({ projects }),
+  setTeams: (teams, tasks) => set({ teams, tasks }),
   addUserMessage: (text) =>
     set((s) => ({ chat: [...s.chat, { role: "user", text, ts: Date.now() }], streaming: "" })),
   setChatBusy: (chatBusy) => set({ chatBusy }),
@@ -81,6 +87,16 @@ export const useHub = create<HubState>((set) => ({
           };
         case "registry.updated":
           return { projects: e.projects };
+        case "teams.updated":
+          return { teams: e.teams };
+        case "task.updated": {
+          const exists = s.tasks.some((t) => t.id === e.task.id);
+          return {
+            tasks: exists ? s.tasks.map((t) => (t.id === e.task.id ? e.task : t)) : [...s.tasks, e.task],
+          };
+        }
+        case "task.deleted":
+          return { tasks: s.tasks.filter((t) => t.id !== e.taskId) };
         case "agent.status":
           return { statuses: { ...s.statuses, [e.agent]: e.status } };
         case "agent.message":

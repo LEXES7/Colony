@@ -80,9 +80,22 @@ Security is the first-class design constraint, not an afterthought:
 
 Per-project model overrides are available in the dashboard.
 
+## Teams — your agent company
+
+Create a **team** on any project folder and staff it with roles: **project manager**, **developers**, **PR reviewer**, **devops**. Then:
+
+1. Give the team a **goal**. The PM agent explores the repo and breaks the goal into tasks — each with a title, self-contained description, an assignee, and an **ETA estimate** — created through a structured tool call (nothing parsed from prose).
+2. **Run** tasks one by one or hit **Run all**. Developer agents make real file changes — but only inside the team's folder (path-jailed by a PreToolUse hook; still no shell, secrets still blocked).
+3. If the team has a reviewer, finished work goes to **review**: the reviewer reads the actual changed files and either approves or sends the task back with required changes, which the developer then addresses.
+4. The task board tracks status (`todo → in progress → review → done`), live ETA countdowns, overdue flags, progress notes, and per-member token usage.
+
+The office view gives every team a room with one desk per member — watch who's typing in real time.
+
 ## Roadmap
 
-v2: role-based teams on the same message bus — a project manager, PR reviewer, developers and devops agents collaborating on a single project. The v1 architecture (agents addressed by id, role-agnostic bus, per-agent tool policies) is built for it.
+- PM standup mode: periodic re-planning of the board against actual progress
+- Task dependencies and parallel developer execution
+- Git integration: branch per task, diff view in review
 
 ## License
 

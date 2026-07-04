@@ -3,12 +3,14 @@ import Fastify from "fastify";
 import fastifyStatic from "@fastify/static";
 import fastifyWebsocket from "@fastify/websocket";
 import { AgentManager } from "./agents/agentManager.js";
+import { TeamManager } from "./agents/teamManager.js";
 import { loadConfig, loadToken, webDistDir } from "./config.js";
 import { createHubServer } from "./mcp/hubTools.js";
 import { Registry } from "./registry.js";
 import { registerChatRoutes } from "./routes/chat.js";
 import { registerConfigRoutes } from "./routes/config.js";
 import { registerProjectRoutes } from "./routes/projects.js";
+import { registerTeamRoutes } from "./routes/teams.js";
 import { registerWsRoute } from "./routes/ws.js";
 import { makeRequestGuard } from "./security.js";
 
@@ -17,6 +19,7 @@ const token = loadToken();
 const registry = new Registry();
 const manager = new AgentManager(registry, config);
 manager.setHubServer(createHubServer(registry, manager));
+const teamManager = new TeamManager(registry, config, manager);
 
 const app = Fastify({
   logger: { level: "info" },
@@ -29,13 +32,16 @@ await app.register(fastifyWebsocket);
 registerWsRoute(app, token);
 registerConfigRoutes(app, config);
 registerProjectRoutes(app, registry, manager, config);
+registerTeamRoutes(app, registry, teamManager, manager, config);
 registerChatRoutes(app, manager);
 
 app.get("/api/health", async () => ({ ok: true, name: "colony" }));
 
 // Serve the built dashboard when it exists (production); in dev, Vite serves it.
 if (fs.existsSync(webDistDir)) {
-  await app.register(fastifyStatic, { root: webDistDir, wildcard: false });
+  // wildcard (default) resolves files at request time, so a rebuilt dist with
+  // new hashed asset names works without restarting the server
+  await app.register(fastifyStatic, { root: webDistDir });
   app.setNotFoundHandler((req, reply) => {
     if (req.raw.method === "GET" && !req.url.startsWith("/api/")) {
       return reply.sendFile("index.html");

@@ -85,6 +85,35 @@ export class AgentManager {
     return this.statuses.get(name) ?? "idle";
   }
 
+  /** Status for any agent id (team members, main) — no project gating. */
+  statusOf(agentId: string): AgentStatus {
+    return this.statuses.get(agentId) ?? "idle";
+  }
+
+  /**
+   * Generic serialized query for any agent id (used by TeamManager). The
+   * caller owns option policy; this owns queueing, status events, timeout
+   * handling, and handing the outcome back for usage/session accounting.
+   */
+  async runForAgent(
+    agentId: string,
+    prompt: string,
+    options: Options,
+    timeoutMs: number,
+    onOutcome: (outcome: { text: string; sessionId: string | null; usage: Usage }) => void
+  ): Promise<string> {
+    return this.enqueue(agentId, async () => {
+      this.setStatus(agentId, "busy");
+      try {
+        const outcome = await this.runQuery(agentId, prompt, options, timeoutMs);
+        onOutcome(outcome);
+        return outcome.text;
+      } finally {
+        this.setStatus(agentId, "idle");
+      }
+    });
+  }
+
   private setStatus(name: string, status: AgentStatus): void {
     this.statuses.set(name, status);
     bus.emit({ type: "agent.status", agent: name, status });

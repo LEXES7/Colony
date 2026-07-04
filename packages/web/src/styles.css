@@ -125,6 +125,40 @@ header h1 { margin: 0; }
 .codeblock { background: #0c0e12; border: 1px solid var(--border); border-radius: 6px; padding: 8px 10px; overflow-x: auto; font-size: 0.8rem; margin: 6px 0; }
 .inline-code { background: #0c0e12; border: 1px solid var(--border); border-radius: 4px; padding: 0 4px; font-size: 0.85em; }
 
+/* teams */
+.role-picks { display: flex; flex-wrap: wrap; gap: 4px; }
+.pick { font-size: 0.72rem; padding: 4px 8px; border: 1px solid var(--border); border-radius: 12px; cursor: pointer; color: var(--muted); user-select: none; }
+.pick input { display: none; }
+.pick.on { border-color: var(--accent); color: var(--accent); }
+.team-card { border: 1px solid var(--border); border-radius: 10px; padding: 10px; margin-top: 12px; }
+.team-head { display: flex; align-items: center; gap: 8px; }
+.team-head strong { flex: 1; color: var(--accent); }
+.team-card .path { color: var(--muted); font-size: 0.72rem; word-break: break-all; margin: 4px 0; }
+.member-chips { display: flex; flex-wrap: wrap; gap: 4px; margin: 6px 0; }
+.chip { font-size: 0.7rem; padding: 2px 8px; border-radius: 10px; border: 1px solid var(--border); color: var(--muted); }
+.chip.busy { border-color: var(--accent); color: var(--accent); }
+.goal { font-size: 0.82rem; line-height: 1.4; margin: 6px 0; }
+.goal-row { display: flex; gap: 6px; margin: 6px 0; }
+.goal-row input { flex: 1; min-width: 0; }
+.tiny { padding: 2px 8px; font-size: 0.7rem; }
+.board { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.task { border: 1px solid var(--border); border-radius: 8px; }
+.task-row { display: flex; align-items: center; gap: 8px; padding: 6px 8px; cursor: pointer; flex-wrap: wrap; }
+.ttitle { flex: 1; font-size: 0.83rem; min-width: 120px; }
+.tassignee { color: var(--muted); font-size: 0.72rem; }
+.tstatus { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 2px 6px; border-radius: 8px; border: 1px solid var(--border); color: var(--muted); white-space: nowrap; }
+.tstatus.in_progress { color: var(--accent); border-color: var(--accent); }
+.tstatus.review, .tstatus.changes_requested { color: #b57edc; border-color: #b57edc; }
+.tstatus.done { color: var(--green); border-color: var(--green); }
+.tstatus.blocked { color: var(--red); border-color: var(--red); }
+.teta { font-size: 0.7rem; color: var(--muted); white-space: nowrap; }
+.teta.overdue { color: var(--red); font-weight: 600; }
+.task-detail { padding: 0 10px 8px; font-size: 0.8rem; }
+.task-detail p { margin: 6px 0; line-height: 1.45; }
+.tnotes { margin: 4px 0; padding-left: 16px; color: var(--muted); font-size: 0.75rem; }
+.tresult { color: var(--green); }
+.treview { color: #b57edc; }
+
 /* usage */
 .usage table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
 .usage th { text-align: left; color: var(--muted); font-weight: 500; padding: 2px 6px 6px 0; }

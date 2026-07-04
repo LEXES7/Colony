@@ -27,6 +27,33 @@ export function drawSprite(
   }
 }
 
+/** Shirt color per team role (developers vary by name). */
+export function roleShirt(role: string, name: string): string {
+  switch (role) {
+    case "pm":
+      return "#e8c53d";
+    case "reviewer":
+      return "#b57edc";
+    case "devops":
+      return "#d08a2e";
+    default:
+      return shirtColor(name);
+  }
+}
+
+export function roleTag(role: string): string {
+  switch (role) {
+    case "pm":
+      return "PM";
+    case "reviewer":
+      return "REV";
+    case "devops":
+      return "OPS";
+    default:
+      return "DEV";
+  }
+}
+
 /** Stable shirt color per agent name. */
 export function shirtColor(name: string): string {
   const shirts = ["#2f8f5b", "#3d6fd6", "#c14b4b", "#b57edc", "#d08a2e", "#3aa6a6", "#7a9c3a"];
@@ -95,6 +122,66 @@ export const ENVELOPE = [
 
 export const ENVELOPE_PALETTE_Q: Palette = { w: "#f2e6c9", f: "#c9a34a" };
 export const ENVELOPE_PALETTE_A: Palette = { w: "#d7f2d7", f: "#4cc38a" };
+
+/** Bookshelf: wooden rack with colored book spines. Drawn at 2 tiles wide. */
+export const BOOKSHELF = [
+  "WWWWWWWWWWWWWW",
+  "WabcWdaeWbcdaW",
+  "WabcWdaeWbcdaW",
+  "WabcWdaeWbcdaW",
+  "WWWWWWWWWWWWWW",
+  "WcdaWebcWaebdW",
+  "WcdaWebcWaebdW",
+  "WcdaWebcWaebdW",
+  "WWWWWWWWWWWWWW",
+  "WeabWcdbWdcaeW",
+  "WeabWcdbWdcaeW",
+  "WWWWWWWWWWWWWW",
+];
+
+export const BOOKSHELF_PALETTE: Palette = {
+  W: "#5e4426",
+  a: "#c14b4b",
+  b: "#3d6fd6",
+  c: "#4cc38a",
+  d: "#e8c53d",
+  e: "#b57edc",
+};
+
+export const PLANT = [
+  "...LL...",
+  ".LLLLLL.",
+  "LLlLLlLL",
+  ".LlLLlL.",
+  "..LLLL..",
+  "...tt...",
+  ".pppppp.",
+  ".pppppp.",
+  "..pppp..",
+];
+
+export const PLANT_PALETTE: Palette = {
+  L: "#3e8f47",
+  l: "#5cb85f",
+  t: "#7a5a33",
+  p: "#b0603a",
+};
+
+export const COOLER = [
+  ".bbbb.",
+  ".bBBb.",
+  ".bBBb.",
+  "wwwwww",
+  "w....w",
+  "wwwwww",
+  ".w..w.",
+];
+
+export const COOLER_PALETTE: Palette = {
+  b: "#5aa7d6",
+  B: "#a8d8f0",
+  w: "#e8e8e8",
+};
 
 /** Simple seeded noise for tile texture variation (stable per tile). */
 export function tileNoise(x: number, y: number): number {
