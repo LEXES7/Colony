@@ -97,6 +97,9 @@ header h1 { margin: 0; }
 .office-scroll { width: 100%; height: 100%; overflow: auto; display: flex; }
 .office-canvas { image-rendering: pixelated; margin: auto; cursor: pointer; display: block; }
 .tagline { color: var(--muted); font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; }
+.view-toggle { margin-left: auto; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; }
+.office3d { width: 100%; height: 100%; }
+.office3d canvas { display: block; }
 
 .dept-card { position: absolute; left: 14px; bottom: 14px; width: 340px; max-height: 70%; overflow: auto; background: rgba(19, 22, 28, 0.96); border: 1px solid var(--accent); border-radius: 10px; padding: 14px; box-shadow: 0 8px 30px rgba(0,0,0,0.5); }
 .dept-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }

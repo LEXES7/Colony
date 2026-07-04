@@ -6,6 +6,7 @@ import ActivityFeed from "./components/ActivityFeed";
 import ChatPane from "./components/ChatPane";
 import DeptCard from "./components/DeptCard";
 import Office from "./components/Office";
+import Office3D from "./components/Office3D";
 import ProjectList from "./components/ProjectList";
 import Settings from "./components/Settings";
 import TeamsPanel from "./components/TeamsPanel";
@@ -35,6 +36,9 @@ export default function App() {
   const [error, setError] = useState<string | null>(null);
   const [tab, setTab] = useState<Tab>("projects");
   const [selected, setSelected] = useState<string | null>(null);
+  const [view, setView] = useState<"3d" | "2d">(
+    (localStorage.getItem("colony-view") as "3d" | "2d") || "3d"
+  );
 
   useEffect(() => {
     setToken(bootstrapToken());
@@ -131,6 +135,16 @@ export default function App() {
         <h1>Colony</h1>
         <span className={connected ? "dot on" : "dot off"} title={connected ? "live" : "disconnected"} />
         <span className="tagline">the office</span>
+        <button
+          className="view-toggle"
+          onClick={() => {
+            const next = view === "3d" ? "2d" : "3d";
+            setView(next);
+            localStorage.setItem("colony-view", next);
+          }}
+        >
+          {view === "3d" ? "2D view" : "3D view"}
+        </button>
       </header>
       {error && <p className="error banner">{error}</p>}
       <div className="columns office-columns">
@@ -138,7 +152,11 @@ export default function App() {
           <ChatPane />
         </aside>
         <main className="office-main">
-          <Office selected={selected} onSelect={setSelected} />
+          {view === "3d" ? (
+            <Office3D selected={selected} onSelect={setSelected} />
+          ) : (
+            <Office selected={selected} onSelect={setSelected} />
+          )}
           {selected && <DeptCard name={selected} onClose={() => setSelected(null)} />}
         </main>
         <aside className="tabs-side">
