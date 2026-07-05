@@ -64,6 +64,11 @@ export const api = {
       tasks: import("@colony/shared").TaskPublic[];
       workflows: import("@colony/shared").WorkflowPublic[];
     }>("/api/teams"),
+  resumeWorkflow: (id: string) =>
+    request<import("@colony/shared").WorkflowPublic>(`/api/workflows/${id}/resume`, {
+      method: "POST",
+      body: "{}",
+    }),
   startWorkflow: (teamId: string, prompt: string) =>
     request<import("@colony/shared").WorkflowPublic>(`/api/teams/${teamId}/workflow`, {
       method: "POST",

@@ -207,7 +207,15 @@ export default function TeamsPanel() {
                         ))}
                       </div>
                       {wf.state.startsWith("awaiting") && (
-                        <p className="wf-gate">⏸ waiting for you — reply in the CEO chat on the left</p>
+                        <p className="wf-gate">⏸ waiting for you — reply in the chat on the left</p>
+                      )}
+                      {wf.state === "failed" && (
+                        <button
+                          disabled={busyBtn === `res-${wf.id}`}
+                          onClick={() => void act(`res-${wf.id}`, () => api.resumeWorkflow(wf.id))}
+                        >
+                          {busyBtn === `res-${wf.id}` ? "resuming…" : "▶ Resume where it stopped"}
+                        </button>
                       )}
                       {wf.log.length > 0 && (
                         <p className="wf-last">

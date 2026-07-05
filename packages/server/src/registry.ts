@@ -84,6 +84,7 @@ const workflowSchema = z.object({
     ])
     .default("questions"),
   gateQuestion: z.string().nullable().default(null),
+  resumeFrom: z.string().nullable().default(null),
   requirements: z.string().nullable().default(null),
   architecture: z.string().nullable().default(null),
   log: z.array(z.object({ ts: z.number(), who: z.string(), text: z.string() })).default([]),
@@ -309,6 +310,7 @@ export class Registry {
         prompt,
         state: "questions",
         gateQuestion: null,
+        resumeFrom: null,
         requirements: null,
         architecture: null,
         log: [],

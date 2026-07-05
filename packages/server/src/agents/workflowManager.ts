@@ -125,9 +125,109 @@ export class WorkflowManager {
     const wf = this.registry.findWorkflow(wfId);
     if (!wf) return;
     const msg = err instanceof Error ? err.message : String(err);
-    this.log(wf, "system", `FAILED: ${msg}`);
+    const phase = wf.state;
+    this.registry.updateWorkflow(wf.id, (w) => {
+      w.resumeFrom = phase;
+    });
+    this.log(wf, "system", `FAILED during ${phase}: ${msg}`);
     this.setState(wf, "failed");
-    this.ceoSay(`Bad news from the ${this.teamOf(wf).name} pipeline — it failed: ${msg}`);
+    this.ceoSay(
+      `The ${this.teamOf(wf).name} team hit a problem during ${phase.replace(/_/g, " ")}: ${msg}\n\nNothing is lost — say "resume" (or press Resume on the team card) and they'll pick up right where they stopped.`
+    );
+  }
+
+  /** Latest failed workflow for a team (or overall) that can be resumed. */
+  findResumable(teamId?: string): Workflow | null {
+    const failed = this.registry.workflows.filter(
+      (w) => w.state === "failed" && (!teamId || w.teamId === teamId)
+    );
+    return failed.length ? failed[failed.length - 1]! : null;
+  }
+
+  /** Re-enter the pipeline at the phase where it failed. */
+  async resume(wfId: string): Promise<WorkflowPublic> {
+    const wf = this.registry.findWorkflow(wfId);
+    if (!wf) throw new Error(`no workflow "${wfId}"`);
+    if (wf.state !== "failed") throw new Error(`workflow is ${wf.state}, not failed`);
+    const team = this.teamOf(wf);
+    const from = (wf.resumeFrom as Workflow["state"] | null) ?? "development";
+    this.registry.updateWorkflow(wf.id, (w) => {
+      w.resumeFrom = null;
+    });
+    this.log(wf, "system", `resuming from ${from}`);
+
+    // unblock tasks that died mid-flight (e.g. session limits)
+    for (const task of this.registry.teamTasks(team.id)) {
+      if (task.status === "blocked" || task.status === "in_progress") {
+        this.registry.updateTask(task.id, (t) => {
+          t.status = "todo";
+          t.notes.push("reset by resume");
+        });
+      }
+    }
+
+    const go = (state: Workflow["state"], run: () => Promise<void>) => {
+      this.setState(wf, state, wf.gateQuestion);
+      void run().catch((err) => this.fail(wf.id, err));
+    };
+
+    switch (from) {
+      case "questions":
+        go("questions", () => this.phaseQuestions(wf.id));
+        break;
+      case "awaiting_requirements":
+        this.setState(wf, "awaiting_requirements", wf.gateQuestion);
+        this.ceoSay(`Picking the ${team.name} venture back up — the team is still waiting on your answers:\n\n${wf.gateQuestion ?? ""}`);
+        break;
+      case "requirements":
+      case "awaiting_req_approval":
+        if (wf.requirements) {
+          this.setState(wf, "awaiting_req_approval", wf.requirements);
+          this.ceoSay(`Resuming ${team.name}: the requirements are ready for your review:\n\n${wf.requirements}\n\nReply "approved" or tell me what to change.`);
+        } else {
+          go("requirements", () => this.phaseRequirements(wf.id, "Use the previous investor answers in this conversation."));
+        }
+        break;
+      case "architecture":
+      case "awaiting_arch_approval":
+        if (wf.architecture) {
+          this.setState(wf, "awaiting_arch_approval", wf.architecture);
+          this.ceoSay(`Resuming ${team.name}: the architecture is ready for your sign-off:\n\n${wf.architecture}\n\nSay "start development" or give feedback.`);
+        } else {
+          go("architecture", () => this.phaseArchitecture(wf.id, null));
+        }
+        break;
+      case "planning":
+        go("planning", () => this.phaseDevelopment(wf.id));
+        break;
+      case "development": {
+        const open = this.registry
+          .teamTasks(team.id)
+          .some((t) => t.status === "todo" || t.status === "changes_requested" || t.status === "review");
+        if (open) {
+          go("development", async () => {
+            await this.teams.runAll(team.id);
+            await this.phaseTesting(wf.id);
+          });
+        } else {
+          go("planning", () => this.phaseDevelopment(wf.id));
+        }
+        break;
+      }
+      case "testing":
+        go("testing", () => this.phaseTesting(wf.id));
+        break;
+      case "security":
+      case "fixing":
+        go("security", () => this.phaseSecurity(wf.id, 1));
+        break;
+      case "delivery":
+        go("delivery", () => this.phaseDelivery(wf.id));
+        break;
+      default:
+        go("planning", () => this.phaseDevelopment(wf.id));
+    }
+    return this.toPublic(this.registry.findWorkflow(wf.id)!);
   }
 
   private async phaseQuestions(wfId: string): Promise<void> {

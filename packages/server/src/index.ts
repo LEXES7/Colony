@@ -19,9 +19,9 @@ const config = loadConfig();
 const token = loadToken();
 const registry = new Registry();
 const manager = new AgentManager(registry, config);
-manager.setHubServer(createHubServer(registry, manager));
 const teamManager = new TeamManager(registry, config, manager);
 const workflowManager = new WorkflowManager(registry, manager, teamManager);
+manager.setHubServer(createHubServer(registry, manager, teamManager, workflowManager));
 
 const app = Fastify({
   logger: { level: "info" },

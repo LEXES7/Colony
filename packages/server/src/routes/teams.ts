@@ -78,6 +78,16 @@ export function registerTeamRoutes(
     }
   });
 
+  /** Resume a failed venture where it stopped. */
+  app.post("/api/workflows/:id/resume", async (req, reply) => {
+    const { id } = z.object({ id: z.string() }).parse(req.params);
+    try {
+      return await workflows.resume(id);
+    } catch (err) {
+      return reply.code(409).send({ error: err instanceof Error ? err.message : "resume failed" });
+    }
+  });
+
   /** Run the whole board in order — fire-and-forget, watch bus events. */
   app.post("/api/teams/:id/run-all", async (req, reply) => {
     const { id } = z.object({ id: z.string() }).parse(req.params);

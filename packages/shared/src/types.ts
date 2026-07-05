@@ -95,6 +95,7 @@ export interface WorkflowPublic {
   prompt: string;
   state: WorkflowState;
   gateQuestion: string | null; // set while waiting on the investor
+  resumeFrom: string | null; // phase to re-enter after a failure
   requirements: string | null;
   architecture: string | null;
   log: WorkflowLogEntry[];
