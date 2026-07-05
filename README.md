@@ -5,7 +5,7 @@
 <img src="assets/banner.svg" width="100%" alt="Colony — your local AI company"/>
 
 **Run a company of AI agents on your own machine.**
-You're the investor. The CEO answers to you. The teams do the work.
+You give the vision. Your main agent runs the team. The team ships the work.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-e8a33d.svg?style=flat-square)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6.svg?style=flat-square&logo=typescript&logoColor=white)](tsconfig.base.json)
@@ -26,9 +26,9 @@ You're the investor. The CEO answers to you. The teams do the work.
 
 ## 🐝 What is Colony?
 
-Colony is a **security-first, local multi-agent platform** built on the Claude Agent SDK. Point it at your project folders and each one gets a resident **expert agent** that knows that codebase. Ask the **CEO** a question like *"how did I implement auth in that other repo?"* and it consults the right expert and answers with file citations.
+Colony is a **security-first, local multi-agent platform** built on the Claude Agent SDK. Point it at your project folders and each one gets a resident **expert agent** that knows that codebase. Ask the **main agent** a question like *"how did I implement auth in that other repo?"* and it consults the right expert and answers with file citations.
 
-Then go further — staff a full **company team** on a project and give it a mission:
+Then go further — put a **team** on a project and give it a mission:
 
 > *"hey, let's build an ecommerce store"*
 
@@ -38,37 +38,35 @@ Then go further — staff a full **company team** on a project and give it a mis
 
 ```mermaid
 flowchart LR
-    I([🧑‍💼 You<br/>the investor]) <-->|chat| CEO[👑 CEO]
-    CEO <--> PM[📋 PM]
-    PM --> ARC[📐 Architect]
-    PM --> D1[💻 Dev 1]
-    PM --> D2[💻 Dev 2]
-    D1 & D2 --> REV[🔍 Reviewer]
-    REV --> QA[🧪 QA Tester]
-    QA --> SEC[🛡️ Security]
-    SEC -->|findings → fix tasks| D1
-    SEC --> CEO
+    YOU([🧑‍💼 You]) <-->|chat| MAIN[⭐ Main agent]
+    MAIN <--> TEAM[🏢 Your team]
+    subgraph TEAM_FLOW [the team at work]
+        Q[❓ questions] --> REQ[📋 requirements] --> ARCH[📐 architecture] --> BUILD[💻 build + review] --> TEST[🧪 testing] --> AUDIT[🛡️ security audit]
+    end
+    TEAM --- TEAM_FLOW
+    AUDIT -->|fixes loop back| BUILD
+    AUDIT --> MAIN
 ```
 
 The pipeline, with **you in the loop at every gate**:
 
-| # | Stage | Who | What happens |
-|---|-------|-----|--------------|
-| 1 | Questions | PM → CEO → **you** | PM studies the repo, sends clarifying questions to your chat |
-| 2 | Requirements | PM → **you** | Your answers become a requirements doc — you approve or push back |
-| 3 | Architecture | Architect → **you** | Design written to `ARCHITECTURE.md` — you say *"start development"* |
-| 4 | Development | PM → Devs → Reviewer | ETA'd tasks spread across developers; every task passes review |
-| 5 | Testing | QA | Traces each requirement through the real code, reports with `file:line` |
-| 6 | Security | Security → Devs | Vulnerability audit; findings auto-become fix tasks, then re-audit |
-| 7 | Delivery | CEO → **you** | CEO inspects the result and hands you the delivery report |
+| # | Stage | What happens |
+|---|-------|--------------|
+| 1 | Questions | The team studies the repo and sends its questions to your chat |
+| 2 | Requirements | Your answers become a requirements doc — you approve or push back |
+| 3 | Architecture | The design lands in `ARCHITECTURE.md` — you say *"start development"* |
+| 4 | Build + review | ETA'd tasks get built, and every finished task is reviewed |
+| 5 | Testing | Each requirement is traced through the real code, reported with `file:line` |
+| 6 | Security audit | Vulnerabilities found become fix tasks automatically, then a re-audit |
+| 7 | Delivery | The main agent inspects the result and hands you the delivery report |
 
-While a team is waiting on you, a banner appears in the chat — your next message goes straight to them.
+While the team is waiting on you, a banner appears in the chat — your next message goes straight to them.
 
 ## ✨ Everything else it does
 
-- 🗂 **Project experts** — toggle a folder on, get an agent that knows it. The CEO consults experts instead of re-reading codebases.
-- 📋 **Task boards with ETAs** — the PM estimates every task; boards show live countdowns, overdue flags, and `took 8m vs eta 10m` receipts.
-- 🏢 **The office** — default **3D voxel view** (orbit, zoom, click rooms) plus a crisp HD **2D pixel view**. Role-colored workers: PM gold, devs blue/green, reviewer purple, QA lime, security red.
+- 🗂 **Project experts** — toggle a folder on, get an agent that knows it. The main agent consults experts instead of re-reading codebases.
+- 📋 **Task boards with ETAs** — every task gets an estimate; boards show live countdowns, overdue flags, and `took 8m vs eta 10m` receipts.
+- 🏢 **The office** — default **3D voxel view** (orbit, zoom, click rooms) plus a crisp HD **2D pixel view**. Every teammate gets their own desk, color, and glowing monitor.
 - 🖥 **Desktop app** — `pnpm desktop` opens Colony in its own native window; it boots and shuts down the server for you.
 - 🪙 **Token counters** — per-agent input/output/cache/cost meters, always visible.
 
@@ -97,8 +95,8 @@ Open the dashboard: http://localhost:5173/#token=…
 
 1. Open it and set your **workspace root** (the folder your projects live in).
 2. Add a project → toggle it **on** → a ~200-word summary is cached.
-3. **Teams tab** → create a team (role presets: PM, architect, 2 devs, reviewer, QA, security, devops) → type a venture → **Start venture**.
-4. Talk to your CEO. Run your company.
+3. **Teams tab** → create a team (one-click member presets) → type a venture → **Start venture**.
+4. Talk to your main agent. Run your company.
 
 > **Note on subscription auth:** using your own Claude login is for your own local use — don't host Colony for other people on top of it. Costs shown on subscription are estimates.
 
@@ -125,10 +123,10 @@ Haiku for experts and summaries, Sonnet where it counts, per-member overrides. C
 
 ## 🗺️ Roadmap
 
-- Git integration: branch per task, real diffs in review, devops that actually pushes
-- Parallel developer execution + task dependencies
-- CEO auto-routing ventures to the right team
-- PM standup mode: periodic re-planning against actual progress
+- Git integration: branch per task, real diffs in review, automated pushes
+- Parallel task execution + task dependencies
+- Main agent auto-routing ventures to the right team
+- Standup mode: periodic re-planning against actual progress
 
 ## 📄 License
 

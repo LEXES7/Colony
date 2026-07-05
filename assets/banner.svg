@@ -25,7 +25,7 @@
 
   <!-- ============ wordmark ============ -->
   <text x="600" y="112" text-anchor="middle" font-size="86" font-weight="bold" letter-spacing="26" fill="url(#shine)">COLONY</text>
-  <text x="600" y="150" text-anchor="middle" font-size="19" letter-spacing="7" fill="#8b93a3">YOUR LOCAL AI COMPANY — CEO · PM · DEVS · QA · SECURITY</text>
+  <text x="600" y="150" text-anchor="middle" font-size="19" letter-spacing="7" fill="#8b93a3">YOUR LOCAL AI COMPANY — A TEAM OF AGENTS AT WORK</text>
 
   <!-- ============ pixel office row ============ -->
   <!-- ground -->
