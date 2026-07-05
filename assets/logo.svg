@@ -1,0 +1,32 @@
+<svg width="240" height="240" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Colony symbol: a hive hexagon of connected agents around the CEO -->
+  <defs>
+    <linearGradient id="hex" x1="0" y1="0" x2="240" y2="240">
+      <stop offset="0" stop-color="#e8a33d"/>
+      <stop offset="1" stop-color="#c97f1a"/>
+    </linearGradient>
+  </defs>
+  <path d="M120 14 L212 66 L212 174 L120 226 L28 174 L28 66 Z"
+        stroke="url(#hex)" stroke-width="10" fill="#14161c" stroke-linejoin="round"/>
+  <!-- connection lines -->
+  <g stroke="#3a4152" stroke-width="5">
+    <line x1="120" y1="120" x2="120" y2="62"/>
+    <line x1="120" y1="120" x2="70" y2="150"/>
+    <line x1="120" y1="120" x2="170" y2="150"/>
+  </g>
+  <!-- agent nodes -->
+  <g>
+    <rect x="104" y="46" width="32" height="32" rx="6" fill="#4cc38a">
+      <animate attributeName="opacity" values="1;0.55;1" dur="2.2s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="54" y="134" width="32" height="32" rx="6" fill="#5aa7d6">
+      <animate attributeName="opacity" values="0.55;1;0.55" dur="2.2s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="154" y="134" width="32" height="32" rx="6" fill="#b57edc">
+      <animate attributeName="opacity" values="1;0.55;1" dur="1.7s" repeatCount="indefinite"/>
+    </rect>
+  </g>
+  <!-- CEO node with crown -->
+  <rect x="98" y="98" width="44" height="44" rx="8" fill="url(#hex)"/>
+  <path d="M104 96 L110 84 L120 94 L130 84 L136 96 Z" fill="url(#hex)"/>
+</svg>

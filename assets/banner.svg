@@ -1,0 +1,124 @@
+<svg width="1200" height="300" viewBox="0 0 1200 300" fill="none" xmlns="http://www.w3.org/2000/svg" font-family="Courier New, monospace">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="300">
+      <stop offset="0" stop-color="#0c0e14"/>
+      <stop offset="1" stop-color="#131722"/>
+    </linearGradient>
+    <linearGradient id="shine" x1="0" y1="0" x2="1200" y2="0">
+      <stop offset="0.35" stop-color="#e8a33d"/>
+      <stop offset="0.5" stop-color="#ffe9be"/>
+      <stop offset="0.65" stop-color="#e8a33d"/>
+      <animateTransform attributeName="gradientTransform" type="translate" from="-1200 0" to="1200 0" dur="4.5s" repeatCount="indefinite"/>
+    </linearGradient>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#a8dcf0"/>
+      <stop offset="1" stop-color="#6db6dd"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="300" fill="url(#bg)"/>
+  <!-- faint grid -->
+  <g stroke="#1d2331" stroke-width="1">
+    <path d="M0 60H1200 M0 120H1200 M0 180H1200 M0 240H1200"/>
+    <path d="M100 0V300 M300 0V300 M500 0V300 M700 0V300 M900 0V300 M1100 0V300"/>
+  </g>
+
+  <!-- ============ wordmark ============ -->
+  <text x="600" y="112" text-anchor="middle" font-size="86" font-weight="bold" letter-spacing="26" fill="url(#shine)">COLONY</text>
+  <text x="600" y="150" text-anchor="middle" font-size="19" letter-spacing="7" fill="#8b93a3">YOUR LOCAL AI COMPANY — CEO · PM · DEVS · QA · SECURITY</text>
+
+  <!-- ============ pixel office row ============ -->
+  <!-- ground -->
+  <rect x="0" y="262" width="1200" height="38" fill="#2f5c2c"/>
+  <rect x="0" y="258" width="1200" height="6" fill="#3a6f36"/>
+  <!-- corridor path -->
+  <rect x="0" y="268" width="1200" height="12" fill="#8b8b84"/>
+
+  <!-- room 1: CEO -->
+  <g>
+    <rect x="120" y="182" width="180" height="80" fill="#8f959d"/>
+    <rect x="130" y="192" width="160" height="70" fill="#b98f58"/>
+    <rect x="146" y="186" width="26" height="16" fill="url(#sky)"/>
+    <rect x="248" y="186" width="26" height="16" fill="url(#sky)"/>
+    <!-- desk + monitor -->
+    <rect x="180" y="232" width="60" height="14" fill="#7d5a33"/>
+    <rect x="196" y="216" width="28" height="16" fill="#14161a"/>
+    <rect x="199" y="219" width="22" height="10" fill="#39c2e8">
+      <animate attributeName="opacity" values="1;0.5;1" dur="1.6s" repeatCount="indefinite"/>
+    </rect>
+    <!-- boss: head + crown, bobbing -->
+    <g>
+      <rect x="202" y="200" width="16" height="14" fill="#e0ac69"/>
+      <path d="M202 199 L205 192 L210 197 L215 192 L218 199 Z" fill="#e8c53d"/>
+      <animateTransform attributeName="transform" type="translate" values="0 0;0 1.6;0 0" dur="0.9s" repeatCount="indefinite"/>
+    </g>
+    <!-- door + lamp -->
+    <rect x="200" y="248" width="20" height="14" fill="#3a2d1e"/>
+    <rect x="206" y="176" width="8" height="6" fill="#4cc38a">
+      <animate attributeName="fill" values="#4cc38a;#ffb340;#4cc38a" dur="3s" repeatCount="indefinite"/>
+    </rect>
+  </g>
+
+  <!-- room 2: DEV -->
+  <g>
+    <rect x="510" y="182" width="180" height="80" fill="#8f959d"/>
+    <rect x="520" y="192" width="160" height="70" fill="#b98f58"/>
+    <rect x="536" y="186" width="26" height="16" fill="url(#sky)"/>
+    <rect x="638" y="186" width="26" height="16" fill="url(#sky)"/>
+    <rect x="570" y="232" width="60" height="14" fill="#7d5a33"/>
+    <rect x="586" y="216" width="28" height="16" fill="#14161a"/>
+    <rect x="589" y="219" width="22" height="10" fill="#39c2e8">
+      <animate attributeName="opacity" values="0.5;1;0.5" dur="1.2s" repeatCount="indefinite"/>
+    </rect>
+    <!-- scrolling code line -->
+    <rect x="591" y="221" width="12" height="1.6" fill="#ffffff" opacity="0.8">
+      <animate attributeName="y" values="220;227;220" dur="1.2s" repeatCount="indefinite"/>
+    </rect>
+    <g>
+      <rect x="592" y="200" width="16" height="14" fill="#e0ac69"/>
+      <rect x="592" y="196" width="16" height="5" fill="#4a3220"/>
+      <animateTransform attributeName="transform" type="translate" values="0 0;0 2;0 0" dur="0.7s" repeatCount="indefinite"/>
+    </g>
+    <rect x="590" y="248" width="20" height="14" fill="#3a2d1e"/>
+    <rect x="596" y="176" width="8" height="6" fill="#ffb340">
+      <animate attributeName="opacity" values="1;0.4;1" dur="1s" repeatCount="indefinite"/>
+    </rect>
+  </g>
+
+  <!-- room 3: SEC -->
+  <g>
+    <rect x="900" y="182" width="180" height="80" fill="#8f959d"/>
+    <rect x="910" y="192" width="160" height="70" fill="#b98f58"/>
+    <rect x="926" y="186" width="26" height="16" fill="url(#sky)"/>
+    <rect x="1028" y="186" width="26" height="16" fill="url(#sky)"/>
+    <rect x="960" y="232" width="60" height="14" fill="#7d5a33"/>
+    <rect x="976" y="216" width="28" height="16" fill="#14161a"/>
+    <rect x="979" y="219" width="22" height="10" fill="#c14b4b">
+      <animate attributeName="opacity" values="1;0.55;1" dur="2s" repeatCount="indefinite"/>
+    </rect>
+    <g>
+      <rect x="982" y="200" width="16" height="14" fill="#e0ac69"/>
+      <rect x="982" y="196" width="16" height="5" fill="#4a3220"/>
+      <animateTransform attributeName="transform" type="translate" values="0 0;0 1.4;0 0" dur="1.1s" repeatCount="indefinite"/>
+    </g>
+    <rect x="980" y="248" width="20" height="14" fill="#3a2d1e"/>
+    <rect x="986" y="176" width="8" height="6" fill="#4cc38a"/>
+  </g>
+
+  <!-- ============ envelope messenger commuting between rooms ============ -->
+  <g>
+    <rect x="-14" y="-9" width="28" height="18" rx="2" fill="#f2e6c9" stroke="#c9a34a" stroke-width="2"/>
+    <path d="M-14 -9 L0 3 L14 -9" stroke="#c9a34a" stroke-width="2" fill="none"/>
+    <animateMotion dur="6s" repeatCount="indefinite" path="M 210 274 L 600 274 L 990 274 L 600 274 Z"/>
+    <animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="0.5s" repeatCount="indefinite" additive="sum"/>
+  </g>
+
+  <!-- typing dots between title and office -->
+  <g fill="#4cc38a">
+    <circle cx="572" cy="168" r="3"><animate attributeName="opacity" values="0;1;0" dur="1.2s" repeatCount="indefinite"/></circle>
+    <circle cx="586" cy="168" r="3"><animate attributeName="opacity" values="0;1;0" dur="1.2s" begin="0.2s" repeatCount="indefinite"/></circle>
+    <circle cx="600" cy="168" r="3"><animate attributeName="opacity" values="0;1;0" dur="1.2s" begin="0.4s" repeatCount="indefinite"/></circle>
+    <circle cx="614" cy="168" r="3"><animate attributeName="opacity" values="0;1;0" dur="1.2s" begin="0.6s" repeatCount="indefinite"/></circle>
+    <circle cx="628" cy="168" r="3"><animate attributeName="opacity" values="0;1;0" dur="1.2s" begin="0.8s" repeatCount="indefinite"/></circle>
+  </g>
+</svg>

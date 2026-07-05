@@ -1,127 +1,139 @@
-# Colony
+<div align="center">
 
-A local, security-first platform for running a **team of AI agents over your own projects**.
+<img src="assets/logo.svg" width="130" alt="Colony logo"/>
 
-Register your project folders and flip each one's agent on or off. Every enabled folder gets a resident **expert agent** that knows that codebase. You chat with one **main agent**, and when your question touches another project — *"how did I implement auth in that other repo?"* — the main agent consults that project's expert directly and synthesizes the answer, with file citations.
+<img src="assets/banner.svg" width="100%" alt="Colony — your local AI company"/>
 
-Everything runs on your machine, with your own Claude credentials. Nothing is hosted, nothing leaves localhost.
+**Run a company of AI agents on your own machine.**
+You're the investor. The CEO answers to you. The teams do the work.
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-e8a33d.svg?style=flat-square)](LICENSE)
+[![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6.svg?style=flat-square&logo=typescript&logoColor=white)](tsconfig.base.json)
+[![Claude Agent SDK](https://img.shields.io/badge/Claude-Agent%20SDK-d97757.svg?style=flat-square)](https://docs.claude.com/en/api/agent-sdk/overview)
+[![Local first](https://img.shields.io/badge/100%25-local-4cc38a.svg?style=flat-square)](#-security-model)
+[![No API key needed](https://img.shields.io/badge/API%20key-optional-8b93a3.svg?style=flat-square)](#prerequisites)
+[![PRs welcome](https://img.shields.io/badge/PRs-welcome-b57edc.svg?style=flat-square)](https://github.com/LEXES7/Colony/pulls)
+
+<br/>
+
+<img src="assets/office-3d.png" width="88%" alt="The 3D voxel office — every agent has a desk"/>
+
+*The live 3D office: every project and team gets a room. Monitors glow and characters type while agents actually work. Envelopes fly between rooms when agents talk to each other.*
+
+</div>
+
+---
+
+## 🐝 What is Colony?
+
+Colony is a **security-first, local multi-agent platform** built on the Claude Agent SDK. Point it at your project folders and each one gets a resident **expert agent** that knows that codebase. Ask the **CEO** a question like *"how did I implement auth in that other repo?"* and it consults the right expert and answers with file citations.
+
+Then go further — staff a full **company team** on a project and give it a mission:
+
+> *"hey, let's build an ecommerce store"*
+
+…and watch the org run it end-to-end, pausing to ask **you** for decisions at every gate.
+
+## 🏛️ Company mode
+
+```mermaid
+flowchart LR
+    I([🧑‍💼 You<br/>the investor]) <-->|chat| CEO[👑 CEO]
+    CEO <--> PM[📋 PM]
+    PM --> ARC[📐 Architect]
+    PM --> D1[💻 Dev 1]
+    PM --> D2[💻 Dev 2]
+    D1 & D2 --> REV[🔍 Reviewer]
+    REV --> QA[🧪 QA Tester]
+    QA --> SEC[🛡️ Security]
+    SEC -->|findings → fix tasks| D1
+    SEC --> CEO
 ```
-you ──chat──▶ main agent ──ask_project_agent──▶ project experts (one per enabled folder)
-                   │                                   │
-                   └──────────── live activity feed ◀──┘
-```
 
-## Prerequisites
+The pipeline, with **you in the loop at every gate**:
 
-- Node.js ≥ 18 and [pnpm](https://pnpm.io)
-- Claude credentials, either:
-  - **Claude Code subscription login** (default): be logged into [Claude Code](https://claude.com/claude-code) on this machine — Colony uses that session, no API key needed; or
-  - **Anthropic API key**: put `ANTHROPIC_API_KEY=sk-ant-…` in `.env` (see `.env.example`) for pay-per-token billing.
+| # | Stage | Who | What happens |
+|---|-------|-----|--------------|
+| 1 | Questions | PM → CEO → **you** | PM studies the repo, sends clarifying questions to your chat |
+| 2 | Requirements | PM → **you** | Your answers become a requirements doc — you approve or push back |
+| 3 | Architecture | Architect → **you** | Design written to `ARCHITECTURE.md` — you say *"start development"* |
+| 4 | Development | PM → Devs → Reviewer | ETA'd tasks spread across developers; every task passes review |
+| 5 | Testing | QA | Traces each requirement through the real code, reports with `file:line` |
+| 6 | Security | Security → Devs | Vulnerability audit; findings auto-become fix tasks, then re-audit |
+| 7 | Delivery | CEO → **you** | CEO inspects the result and hands you the delivery report |
 
-> Subscription auth is for **your own local use** on your own account. Don't host Colony for other people on top of a claude.ai login — that's against Anthropic's policy. Cost figures shown on subscription are estimates, not a bill.
+While a team is waiting on you, a banner appears in the chat — your next message goes straight to them.
 
-## Quick start
+## ✨ Everything else it does
+
+- 🗂 **Project experts** — toggle a folder on, get an agent that knows it. The CEO consults experts instead of re-reading codebases.
+- 📋 **Task boards with ETAs** — the PM estimates every task; boards show live countdowns, overdue flags, and `took 8m vs eta 10m` receipts.
+- 🏢 **The office** — default **3D voxel view** (orbit, zoom, click rooms) plus a crisp HD **2D pixel view**. Role-colored workers: PM gold, devs blue/green, reviewer purple, QA lime, security red.
+- 🖥 **Desktop app** — `pnpm desktop` opens Colony in its own native window; it boots and shuts down the server for you.
+- 🪙 **Token counters** — per-agent input/output/cache/cost meters, always visible.
+
+<div align="center">
+<img src="assets/office-2d.png" width="88%" alt="The 2D HD pixel office"/>
+
+*The 2D HD view — same office, retina pixel-art rendering.*
+</div>
+
+## 🚀 Quick start
+
+**Prerequisites:** Node ≥ 18, [pnpm](https://pnpm.io), and Claude credentials — either be logged into [Claude Code](https://claude.com/claude-code) on this machine (subscription, no API key needed) or set `ANTHROPIC_API_KEY` in `.env`.
 
 ```bash
+git clone https://github.com/LEXES7/Colony.git
+cd Colony
 pnpm install
-pnpm dev
+pnpm dev          # or: pnpm desktop
 ```
 
-The server prints a one-time dashboard URL containing your access token:
+The server prints a one-time URL with your access token:
 
 ```
-Open the dashboard: http://localhost:5173/#token=xxxxxxxx…
+Open the dashboard: http://localhost:5173/#token=…
 ```
 
-Open it, then on first run set your **workspace root** — the folder that contains your projects (e.g. `~/Documents/GitHub`). Only folders inside it can be registered.
+1. Open it and set your **workspace root** (the folder your projects live in).
+2. Add a project → toggle it **on** → a ~200-word summary is cached.
+3. **Teams tab** → create a team (role presets: PM, architect, 2 devs, reviewer, QA, security, devops) → type a venture → **Start venture**.
+4. Talk to your CEO. Run your company.
 
-Then:
+> **Note on subscription auth:** using your own Claude login is for your own local use — don't host Colony for other people on top of it. Costs shown on subscription are estimates.
 
-1. **Add a project** (name + absolute path) and toggle it **on**. Colony generates a ~200-word summary of the repo (cached, cheap).
-2. Repeat for a second project.
-3. Ask the main agent something that spans both — watch the activity feed show the agents talking to each other.
+## 🔐 Security model
 
-For production use: `pnpm build && pnpm start` serves the built dashboard from the server itself on `http://127.0.0.1:4173`.
+Security is the first design constraint, not a feature:
 
-## Security model
+| Defense | What it stops |
+|---|---|
+| Binds `127.0.0.1` only | anyone else on your network |
+| 256-bit token on every API call + WebSocket | malicious websites scripting `localhost` (CSRF) |
+| `Host`/`Origin` validation | DNS-rebinding attacks |
+| Workspace-root **path jail** (symlinks resolved) + denylist (`~/.ssh`, `~/.aws`, `~/.claude`, `/etc`, …) | agents being aimed at your credentials |
+| Read-only tools for most agents — **no shell, ever** | prompt injection escalating to code execution |
+| Developer writes jailed to the team's folder | a rogue task touching anything outside its project |
+| Secret-file deny hook (`.env*`, keys, credentials) | agents reading secrets even when asked |
+| All runtime state in gitignored `data/` | leaking tokens/registry into a public repo |
 
-Security is the first-class design constraint, not an afterthought:
+A prompt injection hidden in a repo an agent reads can, at worst, produce a wrong *answer* — never execute code or exfiltrate data.
 
-- **Loopback only** — the server binds `127.0.0.1`; other devices on your network can't reach it.
-- **Token auth everywhere** — a random 256-bit token (generated on first run, stored in `data/.hub-token`, mode 0600) is required on every API call and WebSocket connection. A malicious website scripting requests at localhost gets 401s.
-- **Host + Origin validation** — defeats DNS-rebinding and CSRF against the local server.
-- **Path jail** — registered projects must resolve (symlinks followed) inside your configured workspace root; credential directories (`~/.ssh`, `~/.aws`, `~/.claude`, `/etc`, …) are denied outright.
-- **Read-only agents** — agents get `Read`/`Grep`/`Glob` only. No shell, no file writes, no network tools. A prompt injection hidden in a repo can at worst produce a wrong answer — it cannot execute code or exfiltrate.
-- **Secret-file shield** — a PreToolUse hook blocks agents from reading `.env*`, keys, credentials and similar files even if asked.
-- **Nothing sensitive in the repo** — all runtime state (registry, token, usage) lives in the gitignored `data/`; there are no hardcoded paths or credentials.
+## 🪙 Token optimization
 
-## Token-usage optimization
+Haiku for experts and summaries, Sonnet where it counts, per-member overrides. Cached project summaries instead of codebases in context. Session resume so repeat questions cost ~10 fresh tokens. Hard turn caps on every phase. Tool pruning so unused tool schemas never enter context. Live usage meters so regressions are visible immediately.
 
-- **Model tiering** — project experts and summaries run on `claude-haiku-4-5`; the main agent defaults to `claude-sonnet-4-6` (change in `data/config.json`).
-- **Summary cache** — the main agent sees a short cached summary per project, never whole codebases.
-- **Session resume** — repeat questions to an expert reuse its previous session instead of re-exploring the repo.
-- **Brief-answer protocol** — experts answer in <150 words with file citations, no code dumps unless asked.
-- **Turn caps** — consults, summaries and chats each have hard turn limits.
-- **Lazy agents** — an idle agent is just a session-id string in the registry; no processes at rest.
-- **Live counters** — per-agent token/cache/cost counters in the dashboard so you see exactly what everything costs.
+## 🗺️ Roadmap
 
-## Configuration
+- Git integration: branch per task, real diffs in review, devops that actually pushes
+- Parallel developer execution + task dependencies
+- CEO auto-routing ventures to the right team
+- PM standup mode: periodic re-planning against actual progress
 
-`data/config.json` (created on first run):
+## 📄 License
 
-| key | default | meaning |
-|---|---|---|
-| `port` | `4173` | server port (loopback) |
-| `workspaceRoot` | `null` | folder your projects live in — set during onboarding |
-| `defaults.folderModel` | `claude-haiku-4-5` | model for project experts + summaries |
-| `defaults.mainModel` | `claude-sonnet-4-6` | model for the main agent |
-| `defaults.maxConsultTurns` | `8` | turn cap per expert consult |
+[MIT](LICENSE) — build your own colony.
 
-Per-project model overrides are available in the dashboard.
-
-## Company mode — investor → CEO → the whole org
-
-You are the investor; the main agent is your **CEO**. Type a venture into a team's card — *"hey, let's build an ecommerce store"* — and the pipeline runs:
-
-1. The **PM** studies the repo and sends clarifying questions up through the CEO — they appear in your chat, and your reply goes straight back to the team.
-2. PM drafts the **requirements** → you approve or send feedback.
-3. The **architect** designs the solution (written to `ARCHITECTURE.md`) → you say *"start development"*.
-4. PM breaks the work into ETA'd tasks across the **developers**; every finished task passes the **PR reviewer**.
-5. The **QA tester** traces each requirement through the real code; the **security team** audits for vulnerabilities — findings automatically become fix tasks for the devs, then get re-audited.
-6. The **CEO** inspects the result and hands you the delivery report.
-
-Every gate pauses the pipeline and waits for your chat reply. The Teams tab shows a live step timeline; the office shows who's typing.
-
-## Desktop app
-
-```bash
-pnpm desktop
-```
-
-Builds the dashboard and opens Colony in its own native window (Electron) — it boots the local server itself and shuts it down when you close the window. Same localhost-only security model.
-
-## 3D office
-
-The dashboard defaults to a **3D voxel office** (drag to orbit, scroll to zoom, click a room). Every team gets a room with a desk per member; monitors glow and characters type while agents work; envelopes fly between rooms as agents talk. Toggle to the 2D pixel view any time.
-
-## Teams — your agent company
-
-Create a **team** on any project folder and staff it with roles: **project manager**, **developers**, **PR reviewer**, **devops**. Then:
-
-1. Give the team a **goal**. The PM agent explores the repo and breaks the goal into tasks — each with a title, self-contained description, an assignee, and an **ETA estimate** — created through a structured tool call (nothing parsed from prose).
-2. **Run** tasks one by one or hit **Run all**. Developer agents make real file changes — but only inside the team's folder (path-jailed by a PreToolUse hook; still no shell, secrets still blocked).
-3. If the team has a reviewer, finished work goes to **review**: the reviewer reads the actual changed files and either approves or sends the task back with required changes, which the developer then addresses.
-4. The task board tracks status (`todo → in progress → review → done`), live ETA countdowns, overdue flags, progress notes, and per-member token usage.
-
-The office view gives every team a room with one desk per member — watch who's typing in real time.
-
-## Roadmap
-
-- PM standup mode: periodic re-planning of the board against actual progress
-- Task dependencies and parallel developer execution
-- Git integration: branch per task, diff view in review
-
-## License
-
-MIT
+<div align="center">
+<sub>Built with the <a href="https://docs.claude.com/en/api/agent-sdk/overview">Claude Agent SDK</a> · runs entirely on your machine</sub>
+</div>
