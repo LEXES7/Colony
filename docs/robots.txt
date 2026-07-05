@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://lexes7.github.io/Colony/sitemap.xml
