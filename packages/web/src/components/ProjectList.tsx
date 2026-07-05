@@ -29,8 +29,8 @@ export default function ProjectList() {
           }
         }}
       >
-        <input value={name} onChange={(e) => setName(e.target.value)} placeholder="name (a-z, 0-9, -)" />
-        <input value={path} onChange={(e) => setPath(e.target.value)} placeholder="/absolute/path/to/project" />
+        <input value={name} onChange={(e) => setName(e.target.value)} placeholder="short name — e.g. my-shop" />
+        <input value={path} onChange={(e) => setPath(e.target.value)} placeholder="project folder — paste its path" />
         <button type="submit" disabled={!name.trim() || !path.trim()}>
           Add
         </button>
@@ -94,7 +94,7 @@ export default function ProjectList() {
             )}
           </li>
         ))}
-        {projects.length === 0 && <li className="empty">No projects yet — add one above.</li>}
+        {projects.length === 0 && <li className="empty">No projects yet — add a folder and flip it on. Its agent will learn the codebase for you.</li>}
       </ul>
     </section>
   );

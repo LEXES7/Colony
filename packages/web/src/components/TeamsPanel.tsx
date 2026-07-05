@@ -97,8 +97,8 @@ export default function TeamsPanel() {
           });
         }}
       >
-        <input value={name} onChange={(e) => setName(e.target.value)} placeholder="team name" />
-        <input value={path} onChange={(e) => setPath(e.target.value)} placeholder="/absolute/path/to/project" />
+        <input value={name} onChange={(e) => setName(e.target.value)} placeholder="team name — e.g. web team" />
+        <input value={path} onChange={(e) => setPath(e.target.value)} placeholder="project folder — drag it here from Finder, or paste the path" />
         <div className="role-picks">
           {ROLE_PRESETS.map((r) => (
             <label key={r.name} className={picked.has(r.name) ? "pick on" : "pick"}>
@@ -171,7 +171,7 @@ export default function TeamsPanel() {
                       <input
                         value={ventures[team.id] ?? ""}
                         onChange={(e) => setVentures({ ...ventures, [team.id]: e.target.value })}
-                        placeholder='company mode: "hey, let&apos;s build an ecommerce store"'
+                        placeholder='What should this team build? e.g. "an online store"'
                       />
                       <button
                         disabled={busyBtn === `wf-${team.id}` || (ventures[team.id] ?? "").trim().length < 10}
@@ -311,12 +311,12 @@ export default function TeamsPanel() {
                   </li>
                 );
               })}
-              {boardTasks.length === 0 && <li className="empty">No tasks yet — set a goal and hit Plan.</li>}
+              {boardTasks.length === 0 && <li className="empty">Nothing on the board yet — tell the team what to build.</li>}
             </ul>
           </div>
         );
       })}
-      {teams.length === 0 && <p className="empty">No teams yet. Create one above — pick a PM plus at least one developer.</p>}
+      {teams.length === 0 && <p className="empty">No teams yet. Give one a name, point it at a project folder, and pick who's on it — then just tell it what to build.</p>}
     </section>
   );
 }

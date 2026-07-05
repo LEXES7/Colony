@@ -33,7 +33,7 @@ export default function ChatPane() {
 
   return (
     <section className="panel chat">
-      <h2>CEO</h2>
+      <h2>Chat</h2>
       {gate && (
         <p className="gate-banner">
           ⏸ {gateTeam ?? gate.teamId} is waiting on you — your next message answers them
@@ -73,7 +73,7 @@ export default function ChatPane() {
               void send();
             }
           }}
-          placeholder={gate ? "Reply to the waiting team…" : "Talk to your CEO — it consults project experts and runs your teams"}
+          placeholder={gate ? "The team asked you something — just answer here" : "Ask anything — try \"let's build an online store\""}
           rows={2}
         />
         <button type="submit" disabled={chatBusy || !input.trim()}>
