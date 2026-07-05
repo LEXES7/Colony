@@ -13,7 +13,7 @@ import { registerConfigRoutes } from "./routes/config.js";
 import { registerProjectRoutes } from "./routes/projects.js";
 import { registerTeamRoutes } from "./routes/teams.js";
 import { registerWsRoute } from "./routes/ws.js";
-import { makeRequestGuard } from "./security.js";
+import { makeRequestGuard, securityHeaders } from "./security.js";
 
 const config = loadConfig();
 const token = loadToken();
@@ -30,7 +30,20 @@ const app = Fastify({
 
 app.addHook("onRequest", makeRequestGuard(token, config.port));
 
-await app.register(fastifyWebsocket);
+const headers = securityHeaders();
+app.addHook("onSend", async (_req, reply, payload) => {
+  for (const [k, v] of Object.entries(headers)) reply.header(k, v);
+  return payload;
+});
+
+// never leak stack traces or internals to the client
+app.setErrorHandler((err: Error & { statusCode?: number }, _req, reply) => {
+  app.log.error({ err });
+  const code = err.statusCode && err.statusCode >= 400 && err.statusCode < 500 ? err.statusCode : 500;
+  reply.code(code).send({ error: code === 500 ? "internal error" : err.message });
+});
+
+await app.register(fastifyWebsocket, { options: { maxPayload: 64 * 1024 } });
 registerWsRoute(app, token);
 registerConfigRoutes(app, config);
 registerProjectRoutes(app, registry, manager, config);

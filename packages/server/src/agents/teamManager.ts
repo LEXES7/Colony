@@ -16,7 +16,7 @@ const WORK_TIMEOUT_MS = 1_500_000;
 const REVIEW_TIMEOUT_MS = 420_000;
 
 const PLAN_MAX_TURNS = 24;
-const WORK_MAX_TURNS = 50;
+const WORK_MAX_TURNS = 120;
 const REVIEW_MAX_TURNS = 20;
 
 export class TeamManager {
@@ -395,10 +395,15 @@ export class TeamManager {
           .teamTasks(teamId)
           .find((t) => t.status === "todo" || t.status === "changes_requested");
         if (!next) break;
-        await this.runTask(next.id);
-        const after = this.registry.findTask(next.id);
-        if (after?.status === "review") {
-          await this.reviewTask(next.id);
+        // a single failing task blocks itself but must not crash the pipeline
+        try {
+          await this.runTask(next.id);
+          const after = this.registry.findTask(next.id);
+          if (after?.status === "review") {
+            await this.reviewTask(next.id);
+          }
+        } catch {
+          /* task is marked blocked inside runTask */
         }
         if (this.registry.findTask(next.id)?.status === "blocked") break; // stop the line on failure
       }

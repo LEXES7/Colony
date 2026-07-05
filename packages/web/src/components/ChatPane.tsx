@@ -50,7 +50,11 @@ export default function ChatPane() {
             <div className="bubble">{streaming}</div>
           </div>
         )}
-        {chatBusy && !streaming && <div className="thinking">thinking…</div>}
+        {chatBusy && !streaming && (
+          <div className="thinking" aria-label="thinking">
+            <i /><i /><i />
+          </div>
+        )}
         <div ref={bottomRef} />
       </div>
       <form

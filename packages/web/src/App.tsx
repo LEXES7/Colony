@@ -132,7 +132,13 @@ export default function App() {
   return (
     <div className="layout">
       <header>
-        <h1>Colony</h1>
+        <div className="brand">
+          <svg className="brand-mark" viewBox="0 0 240 240" aria-hidden>
+            <path d="M120 14 L212 66 L212 174 L120 226 L28 174 L28 66 Z" stroke="#e8a33d" strokeWidth="14" fill="none" strokeLinejoin="round" />
+            <rect x="92" y="92" width="56" height="56" rx="10" fill="#e8a33d" />
+          </svg>
+          <h1>COLONY</h1>
+        </div>
         <span className={connected ? "dot on" : "dot off"} title={connected ? "live" : "disconnected"} />
         <span className="tagline">the office</span>
         <button

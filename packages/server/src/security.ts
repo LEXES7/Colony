@@ -53,10 +53,23 @@ export function extractBearer(req: FastifyRequest): string | null {
   return header.slice("Bearer ".length).trim();
 }
 
+/** Simple sliding-window rate limiter — one client (loopback), global window. */
+const RATE_WINDOW_MS = 60_000;
+const RATE_MAX = 300;
+let rateHits: number[] = [];
+
+function rateLimited(): boolean {
+  const now = Date.now();
+  rateHits = rateHits.filter((t) => now - t < RATE_WINDOW_MS);
+  if (rateHits.length >= RATE_MAX) return true;
+  rateHits.push(now);
+  return false;
+}
+
 /**
  * Fastify onRequest guard: Host + Origin validation for everything, bearer
- * token for /api/* routes. Static dashboard assets are public (they contain
- * no data; all data flows through the authenticated API).
+ * token + rate limit for /api/* routes. Static dashboard assets are public
+ * (they contain no data; all data flows through the authenticated API).
  */
 export function makeRequestGuard(token: string, port: number) {
   return async (req: FastifyRequest, reply: FastifyReply): Promise<void> => {
@@ -67,11 +80,37 @@ export function makeRequestGuard(token: string, port: number) {
       return reply.code(403).send({ error: "forbidden origin" });
     }
     if (req.url.startsWith("/api/")) {
+      if (rateLimited()) {
+        return reply.code(429).send({ error: "rate limit exceeded" });
+      }
       const presented = extractBearer(req);
       if (!presented || !timingSafeEqualStr(presented, token)) {
         return reply.code(401).send({ error: "missing or invalid token" });
       }
     }
+  };
+}
+
+/** Hardened response headers for everything the server serves. */
+export function securityHeaders(): Record<string, string> {
+  return {
+    "Content-Security-Policy": [
+      "default-src 'self'",
+      "script-src 'self'",
+      "style-src 'self' 'unsafe-inline'",
+      "img-src 'self' data:",
+      "connect-src 'self' ws: wss:",
+      "object-src 'none'",
+      "base-uri 'none'",
+      "frame-ancestors 'none'",
+      "form-action 'self'",
+    ].join("; "),
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "DENY",
+    "Referrer-Policy": "no-referrer",
+    "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
+    "Cross-Origin-Opener-Policy": "same-origin",
+    "Cross-Origin-Resource-Policy": "same-origin",
   };
 }
 
