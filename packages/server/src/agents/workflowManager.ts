@@ -214,9 +214,17 @@ export class WorkflowManager {
         }
         break;
       }
-      case "testing":
-        go("testing", () => this.phaseTesting(wf.id));
+      case "testing": {
+        // finish any open build tasks first, then re-test
+        const openTasks = this.registry
+          .teamTasks(team.id)
+          .some((t) => t.status === "todo" || t.status === "changes_requested" || t.status === "review");
+        go(openTasks ? "development" : "testing", async () => {
+          if (openTasks) await this.teams.runAll(team.id);
+          await this.phaseTesting(wf.id);
+        });
         break;
+      }
       case "security":
       case "fixing":
         go("security", () => this.phaseSecurity(wf.id, 1));

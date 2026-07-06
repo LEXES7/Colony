@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Get Started — Colony</title>
+  <meta name="description" content="Install Colony in two minutes: clone, install, run. Bring your Claude account — nothing else to sign up for." />
+  <link rel="canonical" href="https://lexes7.github.io/Colony/start.html" />
+  <meta name="theme-color" content="#f5f5f7" />
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="site.css" />
+</head>
+<body>
+  <svg width="0" height="0" aria-hidden="true"><defs><linearGradient id="icograd" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff5fa2"/><stop offset="1" stop-color="#a855f7"/></linearGradient></defs></svg>
+  <nav aria-label="Main">
+    <a class="nav-logo" href="index.html" aria-label="Colony home">
+      <svg viewBox="0 0 256 256"><circle cx="128" cy="128" r="78" stroke="url(#icograd)" stroke-width="34" stroke-linecap="round" fill="none" stroke-dasharray="368 122" transform="rotate(38 128 128)"/></svg>
+    </a>
+    <a href="index.html">Overview</a>
+    <a href="security.html">Security</a>
+    <a href="start.html" class="active">Get Started</a>
+    <a class="nav-cta" href="https://github.com/LEXES7/Colony">Get Colony</a>
+  </nav>
+
+  <section class="center" style="padding-bottom: 40px;">
+    <p class="eyebrow reveal in">Get started</p>
+    <h2 class="big reveal in" style="margin-top:12px">Up and running in two minutes.</h2>
+    <p class="lead reveal in">You need Node 18+, pnpm, and a Claude account — either the Claude Code app signed in on this machine, or an API key. Nothing else to sign up for.</p>
+  </section>
+
+  <section style="padding-top: 0;">
+    <div class="steps">
+      <div class="step reveal"><span class="n">1</span><div>
+        <h3>Get the code</h3>
+        <p>Clone the repository and install dependencies.</p>
+        <span class="cmd">git clone https://github.com/LEXES7/Colony.git && cd Colony && pnpm install</span>
+      </div></div>
+      <div class="step reveal"><span class="n">2</span><div>
+        <h3>Start Colony</h3>
+        <p>Run it in your browser, or as its own desktop app. The terminal prints a private link with your personal access key.</p>
+        <span class="cmd">pnpm dev</span>&nbsp;&nbsp;<span class="cmd">pnpm desktop</span>
+      </div></div>
+      <div class="step reveal"><span class="n">3</span><div>
+        <h3>Point it at your work</h3>
+        <p>Choose the folder where your projects live, add a project, and flip it on. Its resident expert learns the codebase for you.</p>
+      </div></div>
+      <div class="step reveal"><span class="n">4</span><div>
+        <h3>Hire a team and talk</h3>
+        <p>Create a team, then just say what you want — "let's build an online store." The team plans, asks for your approval, builds, reviews, tests and audits. You watch it all happen in the office.</p>
+      </div></div>
+    </div>
+  </section>
+
+  <section class="dark center">
+    <h2 class="big reveal">That's the whole setup.</h2>
+    <p class="lead reveal">Everything runs on your machine, under your control, with your account.</p>
+    <div class="cta-row reveal"><a class="btn btn-fill" href="https://github.com/LEXES7/Colony">Get Colony on GitHub</a></div>
+  </section>
+
+  <footer>
+    <div class="foot-cols">
+      <div><h4>Product</h4><a href="index.html">Overview</a><a href="security.html">Security</a><a href="start.html">Get Started</a></div>
+      <div><h4>Resources</h4><a href="https://github.com/LEXES7/Colony">GitHub</a><a href="https://github.com/LEXES7/Colony#-quick-start">Documentation</a><a href="https://github.com/LEXES7/Colony/issues">Issues</a></div>
+      <div><h4>Legal</h4><a href="https://github.com/LEXES7/Colony/blob/main/LICENSE">MIT License</a><a href="https://github.com/LEXES7/Colony/blob/main/SECURITY.md">Security Policy</a></div>
+    </div>
+    <div class="foot-legal">
+      <span class="wordmark"><span class="c">C</span>olony — your local AI company.</span>
+      <span>Copyright © 2026 Sachintha Bhashitha. All rights reserved.</span>
+    </div>
+  </footer>
+  <script>
+    const io = new IntersectionObserver((es) => { for (const e of es) if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }, { threshold: 0.12 });
+    document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+    document.querySelectorAll(".steps").forEach((g) => { [...g.children].forEach((c, i) => c.style.setProperty("--d", `${i * 0.07}s`)); });
+  </script>
+</body>
+</html>
