@@ -10,6 +10,7 @@ import Office3D from "./components/Office3D";
 import ProjectList from "./components/ProjectList";
 import Settings from "./components/Settings";
 import TeamsPanel from "./components/TeamsPanel";
+import Toasts from "./components/Toasts";
 import UsagePanel from "./components/UsagePanel";
 
 /**
@@ -28,6 +29,32 @@ function bootstrapToken(): string | null {
 }
 
 type Tab = "projects" | "teams" | "activity" | "usage" | "settings";
+
+/** Live header chips: who's working right now + running cost estimate. */
+function HeaderStats() {
+  const { statuses, mainUsage, projects, teams } = useHub();
+  const busy = Object.entries(statuses)
+    .filter(([, s]) => s === "busy")
+    .map(([id]) => id.split("@")[0]);
+  const cost =
+    (mainUsage?.estCostUsd ?? 0) +
+    projects.reduce((sum, p) => sum + p.usage.estCostUsd, 0) +
+    teams.reduce((sum, t) => sum + t.members.reduce((m, x) => m + x.usage.estCostUsd, 0), 0);
+  return (
+    <span className="header-stats">
+      {busy.length > 0 && (
+        <span className="chip busy" title={busy.join(", ")}>
+          {busy.length === 1 ? `${busy[0]} is working` : `${busy.length} agents working`}
+        </span>
+      )}
+      {cost > 0 && (
+        <span className="chip" title="estimated token cost this workspace">
+          ~${cost.toFixed(2)}
+        </span>
+      )}
+    </span>
+  );
+}
 
 export default function App() {
   const { token, setToken, setupComplete, setConfig, setProjects, setTeams, connected } = useHub();
@@ -141,6 +168,7 @@ export default function App() {
         </div>
         <span className={connected ? "dot on" : "dot off"} title={connected ? "live" : "disconnected"} />
         <span className="tagline">the office</span>
+        <HeaderStats />
         <button
           className="view-toggle"
           onClick={() => {
@@ -153,6 +181,7 @@ export default function App() {
         </button>
       </header>
       {error && <p className="error banner">{error}</p>}
+      <Toasts />
       <div className="columns office-columns">
         <aside className="chat-side">
           <ChatPane />

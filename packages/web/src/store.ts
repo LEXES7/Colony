@@ -23,7 +23,16 @@ export interface ActivityItem {
   ts: number;
 }
 
+export interface Toast {
+  id: number;
+  kind: "info" | "success" | "warn" | "error";
+  text: string;
+}
+
 interface HubState {
+  toasts: Toast[];
+  pushToast: (kind: Toast["kind"], text: string) => void;
+  dismissToast: (id: number) => void;
   token: string | null;
   connected: boolean;
   setupComplete: boolean | null;
@@ -51,8 +60,23 @@ interface HubState {
 
 let activitySeq = 0;
 const aid = () => `a${++activitySeq}`;
+let toastSeq = 0;
+
+/** Human wording for pipeline states worth interrupting the user about. */
+function workflowToast(state: string, team: string): { kind: Toast["kind"]; text: string } | null {
+  if (state.startsWith("awaiting")) return { kind: "warn", text: `${team} needs your answer — reply in the chat` };
+  if (state === "done") return { kind: "success", text: `${team} delivered — the venture is complete` };
+  if (state === "failed") return { kind: "error", text: `${team} hit a problem — press Resume to continue` };
+  if (state === "testing") return { kind: "info", text: `${team}: build finished, testing has started` };
+  if (state === "security") return { kind: "info", text: `${team}: security audit underway` };
+  return null;
+}
 
 export const useHub = create<HubState>((set) => ({
+  toasts: [],
+  pushToast: (kind, text) =>
+    set((s) => ({ toasts: [...s.toasts.slice(-3), { id: ++toastSeq, kind, text }] })),
+  dismissToast: (id) => set((s) => ({ toasts: s.toasts.filter((t) => t.id !== id) })),
   token: null,
   connected: false,
   setupComplete: null,
@@ -100,16 +124,29 @@ export const useHub = create<HubState>((set) => ({
         case "teams.updated":
           return { teams: e.teams };
         case "task.updated": {
-          const exists = s.tasks.some((t) => t.id === e.task.id);
+          const prevTask = s.tasks.find((t) => t.id === e.task.id);
+          let toasts = s.toasts;
+          if (prevTask && prevTask.status !== e.task.status && e.task.status === "blocked") {
+            toasts = [...toasts.slice(-3), { id: ++toastSeq, kind: "warn" as const, text: `Task blocked: ${e.task.title}` }];
+          }
           return {
-            tasks: exists ? s.tasks.map((t) => (t.id === e.task.id ? e.task : t)) : [...s.tasks, e.task],
+            toasts,
+            tasks: prevTask ? s.tasks.map((t) => (t.id === e.task.id ? e.task : t)) : [...s.tasks, e.task],
           };
         }
         case "task.deleted":
           return { tasks: s.tasks.filter((t) => t.id !== e.taskId) };
         case "workflow.updated": {
-          const exists = s.workflows.some((w) => w.id === e.workflow.id);
+          const prev = s.workflows.find((w) => w.id === e.workflow.id);
+          const exists = Boolean(prev);
+          let toasts = s.toasts;
+          if (prev?.state !== e.workflow.state) {
+            const team = s.teams.find((t) => t.id === e.workflow.teamId)?.name ?? e.workflow.teamId;
+            const toast = workflowToast(e.workflow.state, team);
+            if (toast) toasts = [...toasts.slice(-3), { id: ++toastSeq, ...toast }];
+          }
           return {
+            toasts,
             workflows: exists
               ? s.workflows.map((w) => (w.id === e.workflow.id ? e.workflow : w))
               : [...s.workflows, e.workflow],

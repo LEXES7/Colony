@@ -269,3 +269,41 @@ header {
 .usage th { text-align: left; color: var(--muted); font-weight: 500; padding: 2px 6px 8px 0; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.05em; }
 .usage td { padding: 5px 6px 5px 0; border-top: 1px solid var(--border-soft); }
 .usage .label { color: var(--accent); font-weight: 600; }
+
+/* ---------- upgrade pass: toasts, welcome, avatars, chrome ---------- */
+::-webkit-scrollbar { width: 9px; height: 9px; }
+::-webkit-scrollbar-thumb { background: #262c3c; border-radius: 5px; border: 2px solid transparent; background-clip: content-box; }
+::-webkit-scrollbar-thumb:hover { background: #333b50; border: 2px solid transparent; background-clip: content-box; }
+::-webkit-scrollbar-track { background: transparent; }
+
+.header-stats { display: flex; gap: 6px; margin-left: 8px; }
+.header-stats .chip { font-size: 0.68rem; }
+
+.toasts { position: fixed; right: 18px; bottom: 18px; z-index: 100; display: flex; flex-direction: column; gap: 8px; max-width: 340px; }
+.toast {
+  padding: 11px 15px; border-radius: 12px; font-size: 0.84rem; line-height: 1.4; cursor: pointer;
+  background: var(--panel-solid); border: 1px solid var(--border); color: var(--text);
+  box-shadow: 0 10px 34px rgba(0,0,0,0.5); animation: toast-in 0.3s cubic-bezier(0.16,1,0.3,1);
+}
+@keyframes toast-in { from { opacity: 0; transform: translateX(30px); } }
+.toast.warn { border-color: var(--accent); background: linear-gradient(90deg, var(--accent-soft), var(--panel-solid)); }
+.toast.success { border-color: var(--green); background: linear-gradient(90deg, var(--green-soft), var(--panel-solid)); }
+.toast.error { border-color: var(--red); }
+
+.welcome { margin: auto 0; padding: 8px 6px; animation: rise 0.4s ease; }
+.welcome-title { font-size: 1.05rem; font-weight: 600; margin: 0 0 4px; }
+.welcome-sub { color: var(--muted); font-size: 0.84rem; margin: 0 0 14px; }
+.suggestion {
+  display: block; width: 100%; text-align: left; margin-bottom: 8px;
+  background: var(--panel-solid); font-size: 0.84rem; padding: 10px 13px; border-radius: 12px;
+}
+.suggestion:hover { border-color: var(--accent); }
+
+.msg { align-items: flex-end; gap: 8px; }
+.avatar {
+  flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.55rem; font-weight: 700; letter-spacing: 0.02em;
+}
+.avatar.agent { background: var(--panel-solid); border: 1px solid var(--border); }
+.avatar.you { background: #2b3446; color: var(--muted); }

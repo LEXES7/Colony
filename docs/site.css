@@ -142,3 +142,25 @@ footer { background: var(--paper); border-top: 1px solid rgba(0,0,0,0.1); paddin
 .foot-cols a { display: block; padding: 3.5px 0; color: var(--sub); }
 .foot-cols a:hover { color: var(--ink); text-decoration: underline; }
 .foot-legal { max-width: 1000px; margin: 26px auto 0; padding-top: 16px; border-top: 1px solid rgba(0,0,0,0.1); display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; }
+
+/* ---------- upgrade pass ---------- */
+.trust { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 22px; font-size: 13px; color: var(--sub); flex-wrap: wrap; }
+.trust i { width: 3px; height: 3px; border-radius: 50%; background: var(--sub); }
+
+.caret { display: inline-block; width: 6px; height: 11px; margin-left: 3px; background: #39c2e8; vertical-align: -1px; animation: caret 1s steps(1) infinite; }
+@keyframes caret { 50% { opacity: 0; } }
+
+.stop { display: inline-flex; align-items: center; gap: 8px; }
+.stop .n { display: inline-flex; align-items: center; justify-content: center; width: 19px; height: 19px; border-radius: 50%; background: rgba(0,0,0,0.06); font-size: 11px; font-weight: 700; color: var(--sub); }
+.dark .stop .n { background: rgba(255,255,255,0.1); color: var(--dark-sub); }
+.stop.you .n { display: none; }
+
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 18px; max-width: 980px; margin: 0 auto; }
+.stat strong { display: block; font-size: clamp(44px, 6vw, 76px); font-weight: 800; letter-spacing: -0.03em; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.stat span { color: var(--sub); font-size: 14px; }
+
+@media (max-width: 760px) {
+  .mock-body { grid-template-columns: 1fr; }
+  .mock-body .sidebar-mock { display: none; }
+  nav { gap: 16px; overflow-x: auto; }
+}
