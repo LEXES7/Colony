@@ -22,6 +22,7 @@ const manager = new AgentManager(registry, config);
 const teamManager = new TeamManager(registry, config, manager);
 const workflowManager = new WorkflowManager(registry, manager, teamManager);
 manager.setHubServer(createHubServer(registry, manager, teamManager, workflowManager));
+workflowManager.recoverInterrupted();
 
 const app = Fastify({
   logger: { level: "info" },

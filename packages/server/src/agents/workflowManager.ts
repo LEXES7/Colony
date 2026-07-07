@@ -136,6 +136,35 @@ export class WorkflowManager {
     );
   }
 
+  /**
+   * Crash recovery, called once at server startup: any workflow that was
+   * mid-phase when the process died is marked failed-but-resumable, and
+   * tasks orphaned in_progress go back to todo.
+   */
+  recoverInterrupted(): void {
+    const RUNNING: Workflow["state"][] = [
+      "questions", "requirements", "architecture", "planning",
+      "development", "testing", "security", "fixing", "delivery",
+    ];
+    for (const wf of this.registry.workflows) {
+      if (!RUNNING.includes(wf.state)) continue;
+      const phase = wf.state;
+      this.registry.updateWorkflow(wf.id, (w) => {
+        w.resumeFrom = phase;
+        w.state = "failed";
+        w.log.push({ ts: Date.now(), who: "system", text: `interrupted by a restart during ${phase} — resumable` });
+      });
+    }
+    for (const task of this.registry.tasks) {
+      if (task.status === "in_progress") {
+        this.registry.updateTask(task.id, (t) => {
+          t.status = "todo";
+          t.notes.push("reset after restart");
+        });
+      }
+    }
+  }
+
   /** Latest failed workflow for a team (or overall) that can be resumed. */
   findResumable(teamId?: string): Workflow | null {
     const failed = this.registry.workflows.filter(
