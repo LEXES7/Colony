@@ -31,127 +31,226 @@
     <a class="nav-cta" href="https://github.com/LEXES7/Colony">Get Colony</a>
   </nav>
 
-  <section class="center" style="padding-top: 90px; padding-bottom: 70px;">
-    <h1 class="hero-title wordmark reveal in"><span class="c">C</span>olony</h1>
-    <p class="lead reveal in" style="margin-top: 14px;">Your local AI company. A team of agents that plans, builds, reviews, tests and secures real software — entirely on your machine.</p>
-    <div class="cta-row reveal in">
+  <div class="ribbon">Colony 1.0 is here — your AI company, free and open source. <a href="start.html">Get started &rsaquo;</a></div>
+
+  <!-- page title, Apple "Mac" style -->
+  <header class="page-head">
+    <h1 class="wordmark"><span class="c">C</span>olony</h1>
+  </header>
+
+  <!-- product chip ribbon -->
+  <div class="chiprow" aria-label="Explore Colony">
+    <a class="chipi" href="#lineup"><span class="ci"><svg class="icon" viewBox="0 0 24 24"><path d="M3 20V9l9-5 9 5v11M9 20v-5h6v5M3 20h18" stroke="url(#icograd)"/></svg></span>The Office</a>
+    <a class="chipi" href="#lineup"><span class="ci"><svg class="icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z" stroke="url(#icograd)"/></svg></span>Chat</a>
+    <a class="chipi" href="#lineup"><span class="ci"><svg class="icon" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01" stroke="url(#icograd)"/></svg></span>Task Boards</a>
+    <a class="chipi" href="#lineup"><span class="ci"><svg class="icon" viewBox="0 0 24 24"><path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-4z" stroke="url(#icograd)"/></svg></span>Security</a>
+    <a class="chipi" href="#lineup"><span class="ci"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2" stroke="url(#icograd)"/><path d="M12 17v4M8 21h8" stroke="url(#icograd)"/></svg></span>Desktop App</a>
+    <a class="chipi" href="#know"><span class="ci"><svg class="icon" viewBox="0 0 24 24"><path d="M13 3L4 14h6l-1 7 9-11h-6l1-7z" stroke="url(#icograd)"/></svg></span>Ventures</a>
+    <a class="chipi" href="security.html"><span class="ci"><svg class="icon" viewBox="0 0 24 24"><path d="M9 12l2 2 4-5M12 22c5-2 8-6 8-11V5l-8-3-8 3v6c0 5 3 9 8 11z" stroke="url(#icograd)"/></svg></span>Threat Model</a>
+    <a class="chipi" href="https://github.com/LEXES7/Colony"><span class="ci"><svg class="icon" viewBox="0 0 24 24"><path d="M12 3a9 9 0 00-3 17.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.2-3.4-1.2-.4-1.1-1-1.4-1-1.4-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5a4 4 0 011-2.7c-.1-.3-.5-1.3.1-2.7 0 0 .9-.3 2.8 1a9.4 9.4 0 015 0c1.9-1.3 2.8-1 2.8-1 .6 1.4.2 2.4.1 2.7a4 4 0 011 2.7c0 3.9-2.4 4.7-4.6 5 .4.3.7.9.7 1.9v2.8c0 .3.2.6.7.5A9 9 0 0012 3z" stroke="url(#icograd)"/></svg></span>GitHub</a>
+  </div>
+
+  <!-- Explore the lineup -->
+  <section class="band" id="lineup" style="padding-top: 60px;">
+    <div class="band-head">
+      <h2 class="big reveal-left">Explore the lineup.</h2>
+      <a class="grey" href="https://github.com/LEXES7/Colony" style="font-size:14px">View on GitHub &rsaquo;</a>
+    </div>
+    <div class="filters" role="tablist" aria-label="Filter lineup">
+      <button class="filter on" data-cat="all">All</button>
+      <button class="filter" data-cat="surface">Surfaces</button>
+      <button class="filter" data-cat="work">Workflow</button>
+      <button class="filter" data-cat="safety">Safety</button>
+    </div>
+    <div class="shelf-wrap">
+      <div class="shelf" id="lineup-shelf">
+        <div class="scard" data-cat="surface">
+          <div class="art">
+            <span class="ill-glow" style="background:#ff5fa2; top:-70px; left:-40px"></span>
+            <div class="ill-office office-mock" style="height:auto">
+              <div class="room"><span class="tag">TEAM</span><div class="desk busy"><span class="screen"></span><span class="body" style="background:#5aa7d6"></span></div></div>
+              <div class="room"><span class="tag">QA</span><div class="desk"><span class="screen"></span><span class="body" style="background:#7a9c3a"></span></div></div>
+            </div>
+          </div>
+          <div class="body">
+            <span class="kicker">Surface</span>
+            <h3>The Office</h3>
+            <p>A living floor plan of your company. Watch monitors glow and messages fly between rooms while agents work — in 3D or pixel art.</p>
+            <span class="price">Included, like everything.</span>
+            <div class="row"><a class="btn btn-fill" href="start.html">Get</a><a class="btn btn-line" href="#know">Learn more</a></div>
+          </div>
+        </div>
+        <div class="scard" data-cat="surface">
+          <div class="art">
+            <span class="ill-glow" style="background:#a855f7; bottom:-70px; right:-40px"></span>
+            <div class="ill-chat">
+              <div class="bubble you">Let's build an online store</div>
+              <div class="bubble ai">The team has four questions first&hellip;</div>
+            </div>
+          </div>
+          <div class="body">
+            <span class="kicker">Surface</span>
+            <h3>Chat</h3>
+            <p>One conversation runs the whole company. Plain language in, executive updates out — never a wall of code.</p>
+            <span class="price">Your words are the interface.</span>
+            <div class="row"><a class="btn btn-fill" href="start.html">Get</a><a class="btn btn-line" href="#know">Learn more</a></div>
+          </div>
+        </div>
+        <div class="scard" data-cat="work">
+          <div class="art">
+            <div class="ill-board" style="width:66%">
+              <div class="meter"><i></i></div>
+              <div class="row" style="display:flex; padding:6px 0; border-bottom:1px solid #ececf1"><span>Product pages</span><span class="pill g" style="margin-left:auto">done</span></div>
+              <div class="row" style="display:flex; padding:6px 0"><span>Cart &amp; checkout</span><span class="pill a" style="margin-left:auto">building</span></div>
+            </div>
+          </div>
+          <div class="body">
+            <span class="kicker">Workflow</span>
+            <h3>Task Boards</h3>
+            <p>Every venture becomes estimated tasks with live countdowns, honest receipts, and review on every single change.</p>
+            <span class="price">ETAs that mean something.</span>
+            <div class="row"><a class="btn btn-fill" href="start.html">Get</a><a class="btn btn-line" href="#know">Learn more</a></div>
+          </div>
+        </div>
+        <div class="scard" data-cat="work">
+          <div class="art">
+            <span class="ill-glow" style="background:#c26bf0; top:-60px; right:-50px"></span>
+            <div style="position:relative; width:70px; height:70px"><div class="ill-cube"><i></i><i></i></div></div>
+          </div>
+          <div class="body">
+            <span class="kicker">Workflow</span>
+            <h3>Ventures</h3>
+            <p>The full pipeline: questions, requirements, architecture, build, review, testing, security audit, delivery — with your yes at every gate.</p>
+            <span class="price">Seven stages. Zero surprises.</span>
+            <div class="row"><a class="btn btn-fill" href="start.html">Get</a><a class="btn btn-line" href="#know">Learn more</a></div>
+          </div>
+        </div>
+        <div class="scard" data-cat="safety">
+          <div class="art">
+            <div class="ill-shield"><svg class="icon" viewBox="0 0 24 24"><path d="M9 12l2 2 4-5M12 22c5-2 8-6 8-11V5l-8-3-8 3v6c0 5 3 9 8 11z" stroke="url(#icograd)"/></svg></div>
+          </div>
+          <div class="body">
+            <span class="kicker">Safety</span>
+            <h3>Containment</h3>
+            <p>No shell. No network. Path-jailed writing, protected secrets, and a public threat model. Injection can't become execution.</p>
+            <span class="price">Security is the architecture.</span>
+            <div class="row"><a class="btn btn-fill" href="security.html">Learn more</a></div>
+          </div>
+        </div>
+        <div class="scard" data-cat="surface">
+          <div class="art">
+            <div class="ill-window">
+              <div class="wbar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></div>
+              <div class="wline g"></div><div class="wline"></div><div class="wline" style="width:70%"></div>
+            </div>
+          </div>
+          <div class="body">
+            <span class="kicker">Surface</span>
+            <h3>Desktop App</h3>
+            <p>Colony in its own native window. One command opens it, and the server starts and stops with the app.</p>
+            <span class="price">pnpm desktop. That's it.</span>
+            <div class="row"><a class="btn btn-fill" href="start.html">Get</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="arrows"><button class="arrow" data-shelf="lineup-shelf" data-dir="-1" aria-label="Scroll left">&lsaquo;</button><button class="arrow" data-shelf="lineup-shelf" data-dir="1" aria-label="Scroll right">&rsaquo;</button></div>
+  </section>
+
+  <!-- Why band -->
+  <section class="band" style="padding-top: 20px;">
+    <div class="band-head">
+      <h2 class="big reveal-left">Why Colony is the best way<br/>to run AI agents.</h2>
+    </div>
+    <div class="shelf-wrap">
+      <div class="shelf" id="why-shelf">
+        <div class="scard"><div class="body" style="padding-top:28px">
+          <span class="kicker">Ownership</span><h3>Your machine. Your data.</h3>
+          <p>No cloud, no accounts, no telemetry. Code and conversations never leave your computer — there is nothing to leak.</p>
+        </div></div>
+        <div class="scard"><div class="body" style="padding-top:28px">
+          <span class="kicker">Control</span><h3>You're the boss.</h3>
+          <p>Nothing gets built without your approval. Requirements and architecture wait for your yes, and every task passes review.</p>
+        </div></div>
+        <div class="scard"><div class="body" style="padding-top:28px">
+          <span class="kicker">Resilience</span><h3>Nothing is ever lost.</h3>
+          <p>Usage limit? Crash? Closed your laptop? One press of Resume and the team picks up exactly where it stopped.</p>
+        </div></div>
+        <div class="scard"><div class="body" style="padding-top:28px">
+          <span class="kicker">Cost</span><h3>Free, and frugal.</h3>
+          <p>Open source under MIT. Cheap models do the routine work, capable ones do the thinking, and live meters show every token.</p>
+        </div></div>
+      </div>
+    </div>
+    <div class="arrows"><button class="arrow" data-shelf="why-shelf" data-dir="-1" aria-label="Scroll left">&lsaquo;</button><button class="arrow" data-shelf="why-shelf" data-dir="1" aria-label="Scroll right">&rsaquo;</button></div>
+  </section>
+
+  <!-- Get to know Colony — dark cards -->
+  <section class="band dark-band" id="know" style="padding-top: 20px;">
+    <div class="band-head">
+      <h2 class="big reveal-left">Get to know Colony.</h2>
+    </div>
+    <div class="shelf-wrap">
+      <div class="shelf" id="know-shelf">
+        <div class="scard dark-card">
+          <div class="art">
+            <span class="ill-glow" style="background:#ff5fa2; top:-60px; left:30%"></span>
+            <div class="ill-chat" style="width:76%">
+              <div class="bubble you" style="background:#2b3446; color:#dfe5ee">Approved — start development</div>
+              <div class="bubble ai" style="background:#1a1e2b; border-color:#242a3b; color:#b8c0cf">Build underway.<span class="caret"></span></div>
+            </div>
+          </div>
+          <div class="body"><span class="kicker">How it works</span><h3>Say it. They build it.</h3>
+          <p>Describe the goal in plain words. The team plans, asks, builds, reviews, tests and audits — pausing for your yes at every gate.</p></div>
+        </div>
+        <div class="scard dark-card">
+          <div class="art">
+            <div class="office-mock" style="width:78%; height:72%">
+              <div class="room"><span class="tag" style="background:#101013">MAIN</span><div class="desk busy"><span class="screen"></span><span class="body" style="background:#e8c53d"></span></div></div>
+              <div class="room" style="position:relative"><span class="tag" style="background:#101013">TEAM</span><div class="desk busy"><span class="screen"></span><span class="body" style="background:#5aa7d6"></span></div><span class="envelope" style="animation-duration:3.4s"></span></div>
+            </div>
+          </div>
+          <div class="body"><span class="kicker">The office</span><h3>Alive while it works.</h3>
+          <p>Glowing monitors, flying messages, a desk for every agent. You always know exactly who is doing what.</p></div>
+        </div>
+        <div class="scard dark-card">
+          <div class="art">
+            <span class="ill-glow" style="background:#a855f7; bottom:-70px; left:-30px"></span>
+            <div class="ill-shield"><svg class="icon" viewBox="0 0 24 24" style="stroke-width:1.4"><path d="M9 12l2 2 4-5M12 22c5-2 8-6 8-11V5l-8-3-8 3v6c0 5 3 9 8 11z" stroke="url(#icograd)"/></svg></div>
+          </div>
+          <div class="body"><span class="kicker">Security</span><h3>Locked down. By design.</h3>
+          <p>Agents can't run commands, can't leave their folders, can't read secrets. The worst an attack can do is waste words.</p></div>
+        </div>
+        <div class="scard dark-card">
+          <div class="art">
+            <div class="ill-board" style="width:70%; color:#a1a1a6">
+              <div class="meter" style="background:#1a1e2b"><i></i></div>
+              <div style="display:flex; padding:6px 0; border-bottom:1px solid #1a1e2b"><span>Build the storefront</span><span class="pill a" style="margin-left:auto">resumed</span></div>
+              <div style="display:flex; padding:6px 0"><span>Security audit</span><span class="pill" style="margin-left:auto; border:1px solid #2a3145">queued</span></div>
+            </div>
+          </div>
+          <div class="body"><span class="kicker">Resilience</span><h3>Resume anything.</h3>
+          <p>Limits, crashes and restarts just pause the work. Your approvals and finished tasks survive everything.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="arrows"><button class="arrow" data-shelf="know-shelf" data-dir="-1" aria-label="Scroll left">&lsaquo;</button><button class="arrow" data-shelf="know-shelf" data-dir="1" aria-label="Scroll right">&rsaquo;</button></div>
+  </section>
+
+  <!-- closing statement -->
+  <section class="center" style="padding-top: 70px; padding-bottom: 110px;">
+    <h2 class="big reveal">Ready to hire your first team?</h2>
+    <p class="lead reveal">Two minutes from clone to company.</p>
+    <div class="cta-row reveal">
       <a class="btn btn-fill" href="start.html">Get started</a>
       <a class="btn btn-line" href="https://github.com/LEXES7/Colony">View on GitHub</a>
     </div>
-    <div class="trust reveal in">
-      <span>Free forever</span><i></i><span>Open source, MIT</span><i></i><span>100% on your machine</span>
-    </div>
-
-    <!-- CSS-drawn live product mockup: chat · office · board -->
-    <div class="mock reveal-zoom" role="img" aria-label="Diagram of the Colony dashboard: chat, live office and task board">
-      <div class="mock-bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i><span style="margin-left:8px">Colony</span></div>
-      <div class="mock-body">
-        <div class="pane">
-          <div style="letter-spacing:.1em; font-size:9px; margin-bottom:6px">CHAT</div>
-          <div class="bubble you">Let's build an online store</div>
-          <div class="bubble ai">The team has four questions before we commit…</div>
-          <div class="bubble you">Approved — start development</div>
-          <div class="bubble ai">Build underway. Review, testing and a security audit will follow.<span class="caret"></span></div>
-        </div>
-        <div class="pane" style="position:relative">
-          <div style="letter-spacing:.1em; font-size:9px; margin-bottom:6px">THE OFFICE</div>
-          <div class="office-mock" style="height: calc(100% - 20px)">
-            <div class="room"><span class="tag">MAIN AGENT</span><div class="desk busy"><span class="screen"></span><span class="body" style="background:#e8c53d"></span></div></div>
-            <div class="room"><span class="tag">WEB TEAM</span>
-              <div class="desk busy"><span class="screen"></span><span class="body" style="background:#5aa7d6"></span></div>
-              <div class="desk"><span class="screen"></span><span class="body" style="background:#b57edc"></span></div>
-            </div>
-            <div class="room"><span class="tag">QA</span><div class="desk"><span class="screen"></span><span class="body" style="background:#7a9c3a"></span></div></div>
-            <div class="room"><span class="tag">SECURITY</span><div class="desk busy"><span class="screen"></span><span class="body" style="background:#c14b4b"></span></div></div>
-          </div>
-          <span class="envelope" aria-hidden="true"></span>
-        </div>
-        <div class="pane sidebar-mock">
-          <div style="letter-spacing:.1em; font-size:9px; margin-bottom:6px">BOARD</div>
-          <div class="meter"><i></i></div>
-          <div class="row"><span>Product pages</span><span class="pill g" style="margin-left:auto">done</span></div>
-          <div class="row"><span>Cart &amp; checkout</span><span class="pill a" style="margin-left:auto">building</span></div>
-          <div class="row"><span>Security audit</span><span class="pill" style="margin-left:auto; border:1px solid #2a3145">queued</span></div>
-        </div>
-      </div>
-    </div>
   </section>
 
-  <section class="dark center">
-    <p class="eyebrow reveal">How it works</p>
-    <h2 class="big reveal" style="margin-top:12px">Say it. They build it.<br/>You approve every step.</h2>
-    <p class="lead reveal">Describe what you want in plain words. Your team asks smart questions, writes the plan, designs the architecture — and pauses for your yes before anything is built.</p>
-    <div class="rail">
-      <span class="stop"><b class="n">1</b>questions</span>
-      <span class="stop"><b class="n">2</b>requirements</span>
-      <span class="stop you">your yes</span>
-      <span class="stop"><b class="n">3</b>architecture</span>
-      <span class="stop you">your yes</span>
-      <span class="stop"><b class="n">4</b>build &amp; review</span>
-      <span class="stop"><b class="n">5</b>testing</span>
-      <span class="stop"><b class="n">6</b>security audit</span>
-      <span class="stop"><b class="n">7</b>delivery</span>
-    </div>
-  </section>
-
-  <section class="center" style="padding-top: 90px; padding-bottom: 90px;">
-    <div class="stats">
-      <div class="stat reveal"><strong>0</strong><span>cloud servers</span></div>
-      <div class="stat reveal"><strong>1</strong><span>command to install</span></div>
-      <div class="stat reveal"><strong>7</strong><span>stages per venture</span></div>
-      <div class="stat reveal"><strong>100%</strong><span>local &amp; private</span></div>
-    </div>
-  </section>
-
-  <section style="padding-top: 20px;">
-    <h2 class="big reveal-left">Explore Colony.</h2>
-    <div class="cards">
-      <div class="tile reveal">
-        <svg class="icon" viewBox="0 0 24 24" width="34" height="34"><path d="M3 21V8l9-5 9 5v13M9 21v-6h6v6M3 21h18" stroke="url(#icograd)"/></svg>
-        <h3>A living office</h3>
-        <p>Every project and team gets a room. Monitors glow while agents think, and messages travel between rooms as they collaborate — in 3D or crisp pixel art.</p>
-      </div>
-      <div class="tile night reveal">
-        <svg class="icon" viewBox="0 0 24 24" width="34" height="34"><path d="M8 7h13M8 12h13M8 17h13M3.5 7h.01M3.5 12h.01M3.5 17h.01" stroke="url(#icograd)"/></svg>
-        <h3>Real tasks, real ETAs</h3>
-        <p>Work becomes estimated tasks with live countdowns, overdue flags and honest receipts — took 8 minutes against a 10-minute estimate.</p>
-      </div>
-      <div class="tile reveal">
-        <svg class="icon" viewBox="0 0 24 24" width="34" height="34"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z" stroke="url(#icograd)"/></svg>
-        <h3>Experts on every repo</h3>
-        <p>Point Colony at your projects and each gets a resident expert. Ask how you solved something last year — get the answer with file citations.</p>
-      </div>
-      <div class="tile night reveal">
-        <svg class="icon" viewBox="0 0 24 24" width="34" height="34"><path d="M12 22c5-2 8-6 8-11V5l-8-3-8 3v6c0 5 3 9 8 11zM9 12l2 2 4-4" stroke="url(#icograd)"/></svg>
-        <h3>Reviewed, tested, audited</h3>
-        <p>Every task passes review. Testing traces each requirement through real code. A security audit turns findings into fix tasks automatically.</p>
-      </div>
-      <div class="tile reveal">
-        <svg class="icon" viewBox="0 0 24 24" width="34" height="34"><path d="M13 3L4 14h6l-1 7 9-11h-6l1-7z" stroke="url(#icograd)"/></svg>
-        <h3>Recovers from anything</h3>
-        <p>Hit a usage limit mid-build? Say "resume" and the team picks up exactly where it stopped. Nothing you approved is ever lost.</p>
-      </div>
-      <div class="tile night reveal">
-        <svg class="icon" viewBox="0 0 24 24" width="34" height="34"><rect x="5" y="11" width="14" height="9" rx="2" stroke="url(#icograd)"/><path d="M8 11V7a4 4 0 018 0v4" stroke="url(#icograd)"/></svg>
-        <h3>100% local</h3>
-        <p>No cloud, no accounts, no telemetry. Your code and conversations never leave your machine. Free and open source under MIT.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="dark center">
-    <h2 class="big reveal"><span style="background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent">Locked down by design.</span></h2>
-    <p class="lead reveal">Agents can't run commands, can't leave their folders, can't read secrets — and the whole platform binds to your machine only.</p>
-    <div class="cta-row reveal"><a class="btn btn-line" href="security.html">Read the security model</a></div>
-  </section>
-
-  <section class="center">
-    <h2 class="big reveal">Ready to hire your first team?</h2>
-    <div class="cta-row reveal">
-      <a class="btn btn-fill" href="start.html">Get started</a>
-      <a class="btn btn-line" href="https://github.com/LEXES7/Colony">GitHub</a>
-    </div>
-  </section>
+  <div class="footnotes">
+    <p>1. Colony runs entirely on your computer and connects only to Anthropic's API using your own Claude account. Costs shown in Colony on subscription plans are estimates.</p>
+    <p>2. Agents operate with least privilege: no shell access, no network tools, file writes restricted to assigned folders, and secret files blocked at the tool level. See the <a href="https://github.com/LEXES7/Colony/blob/main/SECURITY.md" style="text-decoration:underline">security policy</a> for the full threat model.</p>
+  </div>
 
   <footer>
     <div class="foot-cols">
@@ -166,12 +265,30 @@
   </footer>
 
   <script>
+    // reveal on scroll
     const io = new IntersectionObserver((es) => {
       for (const e of es) if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
     }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
     document.querySelectorAll(".reveal, .reveal-left, .reveal-right, .reveal-zoom").forEach((el) => io.observe(el));
-    document.querySelectorAll(".cards, .rail, .steps").forEach((g) => {
-      [...g.children].forEach((c, i) => { c.classList.add("reveal"); c.style.setProperty("--d", `${i * 0.06}s`); io.observe(c); });
+
+    // shelf arrows
+    document.querySelectorAll(".arrow").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const shelf = document.getElementById(btn.dataset.shelf);
+        shelf.scrollBy({ left: Number(btn.dataset.dir) * 380, behavior: "smooth" });
+      });
+    });
+
+    // lineup filters
+    document.querySelectorAll(".filter").forEach((f) => {
+      f.addEventListener("click", () => {
+        document.querySelectorAll(".filter").forEach((x) => x.classList.remove("on"));
+        f.classList.add("on");
+        const cat = f.dataset.cat;
+        document.querySelectorAll("#lineup-shelf .scard").forEach((card) => {
+          card.classList.toggle("hidden", cat !== "all" && card.dataset.cat !== cat);
+        });
+      });
     });
   </script>
 </body>
