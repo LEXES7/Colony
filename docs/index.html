@@ -11,239 +11,421 @@
   <meta property="og:description" content="A team of AI agents that plans, builds, reviews, tests and secures software — entirely on your machine." />
   <meta property="og:url" content="https://lexes7.github.io/Colony/" />
   <meta name="twitter:card" content="summary" />
-  <meta name="theme-color" content="#f5f5f7" />
+  <meta name="theme-color" content="#0a0a10" />
   <link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="site.css" />
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"SoftwareApplication","name":"Colony","operatingSystem":"macOS, Linux, Windows","applicationCategory":"DeveloperApplication","description":"A security-first platform that runs a company of AI agents locally.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"url":"https://lexes7.github.io/Colony/","downloadUrl":"https://github.com/LEXES7/Colony"}
   </script>
+  <style>
+    :root {
+      --pink: #ff5fa2; --purple: #a855f7;
+      --grad: linear-gradient(100deg, #ff5fa2 8%, #c26bf0 55%, #a855f7 92%);
+      --bg: #0a0a10; --bg2: #0e0e16; --card: #12121c; --line: #1f1f2e;
+      --text: #ececf2; --sub: #9a9aa8; --mono: ui-monospace, "SF Mono", Menlo, monospace;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Inter, Roboto, sans-serif;
+    }
+    * { margin: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+    a { color: inherit; text-decoration: none; }
+    ::selection { background: rgba(194,107,240,0.35); }
+    .grad { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .mono { font-family: var(--mono); }
+
+    /* ---------- nav ---------- */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 90;
+      display: flex; align-items: center; gap: 26px; height: 56px;
+      padding: 0 max(20px, 4.5vw);
+      background: rgba(10,10,16,0.75); backdrop-filter: saturate(160%) blur(18px);
+      -webkit-backdrop-filter: saturate(160%) blur(18px);
+      border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 13.5px;
+    }
+    nav .logo { display: flex; align-items: center; gap: 9px; font-weight: 700; font-size: 16px; }
+    nav .logo svg { width: 22px; height: 22px; }
+    nav .links { display: flex; gap: 24px; margin-left: auto; align-items: center; }
+    nav .links a { color: var(--sub); transition: color 0.2s; }
+    nav .links a:hover { color: #fff; }
+    .nav-cta { background: var(--grad); color: #fff; padding: 7px 16px; border-radius: 9px; font-weight: 600; transition: transform 0.2s, box-shadow 0.2s; }
+    .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(194,107,240,0.45); }
+
+    /* ---------- hero ---------- */
+    .hero { position: relative; min-height: 88vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 80px 20px 40px; overflow: hidden; }
+    #dots { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .watermark {
+      position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%);
+      font-size: clamp(160px, 26vw, 420px); font-weight: 800; letter-spacing: -0.04em;
+      color: rgba(255,255,255,0.025); pointer-events: none; white-space: nowrap; user-select: none;
+    }
+    .hero > * { position: relative; }
+    .hero .mark { width: 60px; height: 60px; filter: drop-shadow(0 0 34px rgba(194,107,240,0.5)); animation: float 5s ease-in-out infinite; }
+    @keyframes float { 50% { transform: translateY(-9px); } }
+    .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.32em; color: var(--pink); margin-top: 18px; }
+    h1 { font-size: clamp(38px, 6.4vw, 78px); font-weight: 700; letter-spacing: -0.03em; line-height: 1.04; margin-top: 14px; }
+    h1 em { font-family: Georgia, "Times New Roman", serif; font-style: italic; font-weight: 500; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .hero p.sub { font-size: clamp(15px, 1.9vw, 19px); color: var(--sub); max-width: 640px; line-height: 1.55; margin-top: 16px; }
+    .cta-row { display: flex; gap: 14px; margin-top: 28px; flex-wrap: wrap; justify-content: center; }
+    .btn { padding: 13px 28px; border-radius: 11px; font-size: 15px; font-weight: 600; transition: transform 0.2s, box-shadow 0.2s, background 0.2s; }
+    .btn-fill { background: var(--grad); color: #fff; }
+    .btn-fill:hover { transform: translateY(-2px); box-shadow: 0 10px 34px rgba(255,95,162,0.35); }
+    .btn-ghost { border: 1px solid rgba(255,255,255,0.2); font-family: var(--mono); font-size: 14px; }
+    .btn-ghost:hover { background: rgba(255,255,255,0.06); }
+    .scrolldown { margin-top: 36px; color: var(--sub); font-size: 20px; animation: bob 1.8s ease-in-out infinite; }
+    @keyframes bob { 50% { transform: translateY(6px); opacity: 0.5; } }
+
+    /* ---------- section scaffolding ---------- */
+    section { padding: 100px max(20px, 6vw); position: relative; }
+    .kick { font-family: var(--mono); font-size: 12px; letter-spacing: 0.3em; color: var(--pink); text-transform: uppercase; }
+    h2 { font-size: clamp(30px, 4.6vw, 56px); font-weight: 700; letter-spacing: -0.025em; line-height: 1.08; margin-top: 14px; }
+    p.lead { color: var(--sub); font-size: clamp(15px, 1.8vw, 19px); line-height: 1.6; max-width: 640px; margin-top: 16px; }
+    .center { text-align: center; }
+    .center p.lead { margin-left: auto; margin-right: auto; }
+
+    /* ---------- terminal quick start ---------- */
+    .term-wrap { max-width: 880px; margin: 0 auto; }
+    .term { background: #0c0c14; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,0.5); }
+    .term-bar { display: flex; align-items: center; gap: 14px; padding: 12px 16px; border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: 12px; color: var(--sub); }
+    .term-bar .dots { display: flex; gap: 6px; }
+    .term-bar .dots i { width: 11px; height: 11px; border-radius: 50%; }
+    .term-tabs { display: flex; gap: 4px; margin-left: auto; }
+    .term-tab { font-family: var(--mono); font-size: 11.5px; padding: 5px 12px; border-radius: 7px; border: 1px solid transparent; background: none; color: var(--sub); cursor: pointer; }
+    .term-tab.on { color: var(--pink); border-color: rgba(255,95,162,0.4); }
+    .term-body { padding: 22px 22px 26px; font-family: var(--mono); font-size: 14px; line-height: 2.1; color: #d8d8e4; min-height: 150px; }
+    .term-body .cm { color: #5a5a70; }
+    .term-body .pr { color: var(--pink); user-select: none; }
+    .tcursor { display: inline-block; width: 8px; height: 15px; background: var(--pink); vertical-align: -2px; animation: caretb 0.9s steps(1) infinite; }
+    @keyframes caretb { 50% { opacity: 0; } }
+    .copybtn { float: right; font-family: var(--mono); font-size: 11px; color: var(--sub); border: 1px solid var(--line); background: none; border-radius: 7px; padding: 4px 10px; cursor: pointer; }
+    .copybtn:hover { color: #fff; border-color: var(--sub); }
+
+    /* ---------- demo mock ---------- */
+    .mock { max-width: 1060px; margin: 60px auto 0; border-radius: 18px; overflow: hidden; background: #0c0c14; border: 1px solid var(--line); box-shadow: 0 50px 120px rgba(120, 50, 180, 0.18); text-align: left; font-size: 11px; color: var(--sub); }
+    .mock-bar { display: flex; align-items: center; gap: 6px; padding: 11px 14px; background: #10101a; border-bottom: 1px solid var(--line); font-family: var(--mono); }
+    .mock-bar i { width: 10px; height: 10px; border-radius: 50%; }
+    .mock-body { display: grid; grid-template-columns: 1fr 1.7fr 0.9fr; gap: 12px; padding: 14px; min-height: 380px; }
+    .pane { background: #10101a; border: 1px solid var(--line); border-radius: 12px; padding: 12px; }
+    .pane .ph { font-family: var(--mono); letter-spacing: .12em; font-size: 9px; margin-bottom: 8px; color: #6a6a80; }
+    .bubble { border-radius: 10px; padding: 8px 10px; margin: 8px 0; line-height: 1.5; max-width: 92%; }
+    .bubble.you { background: #232336; color: #e8e8f2; margin-left: auto; border-bottom-right-radius: 3px; }
+    .bubble.ai { background: #16162290; border: 1px solid #232336; color: #b4b4c6; border-bottom-left-radius: 3px; }
+    .office-mock { display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: 1fr; gap: 10px; height: calc(100% - 20px); }
+    .room { border: 1.5px solid #2a2a40; border-radius: 10px; position: relative; background: linear-gradient(180deg, #14141f, #10101a); padding: 8px; }
+    .room .tag { position: absolute; top: -8px; left: 10px; background: #0c0c14; padding: 0 6px; font-size: 9px; letter-spacing: 0.1em; color: #8a8aa0; font-family: var(--mono); }
+    .desk { display: flex; gap: 5px; align-items: flex-end; margin-top: 16px; }
+    .desk .screen { width: 22px; height: 14px; border-radius: 3px; background: #1a1a2a; border: 1px solid #2a2a40; }
+    .desk.busy .screen { background: #14303f; border-color: #2ec5e8; box-shadow: 0 0 10px rgba(46,197,232,0.55); animation: glow 1.6s infinite; }
+    .desk .body { width: 12px; height: 16px; border-radius: 4px 4px 0 0; }
+    @keyframes glow { 50% { box-shadow: 0 0 3px rgba(46,197,232,0.25); } }
+    .envelope { position: absolute; width: 10px; height: 7px; border-radius: 2px; background: var(--grad); box-shadow: 0 0 12px rgba(255,95,162,0.8); animation: fly 5s ease-in-out infinite; z-index: 2; }
+    @keyframes fly {
+      0%, 12% { top: 24%; left: 30%; opacity: 0; } 20% { opacity: 1; }
+      45% { top: 24%; left: 64%; } 70% { top: 66%; left: 64%; } 88%, 100% { top: 66%; left: 32%; opacity: 0; }
+    }
+    .brow { display: flex; align-items: center; gap: 8px; padding: 8px 6px; border-bottom: 1px solid #1a1a2a; }
+    .pill { padding: 2px 8px; border-radius: 8px; font-size: 9px; letter-spacing: 0.06em; font-family: var(--mono); }
+    .pill.g { color: #4cc38a; border: 1px solid rgba(76,195,138,0.5); }
+    .pill.a { color: #ffb340; border: 1px solid rgba(255,179,64,0.6); animation: glow 1.6s infinite; }
+    .pill.q { color: #6a6a80; border: 1px solid #2a2a40; }
+    .meter { height: 5px; border-radius: 3px; background: #1a1a2a; margin: 10px 0 14px; overflow: hidden; }
+    .meter i { display: block; height: 100%; border-radius: 3px; background: var(--grad); animation: fill 6s ease-in-out infinite; }
+    @keyframes fill { 0% { width: 12%; } 55% { width: 78%; } 100% { width: 92%; } }
+
+    /* ---------- feature grid ---------- */
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(255px, 1fr)); gap: 16px; max-width: 1180px; margin: 54px auto 0; }
+    .cell { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 26px 24px; transition: transform 0.3s cubic-bezier(0.16,1,0.3,1), border-color 0.3s; position: relative; overflow: hidden; }
+    .cell:hover { transform: translateY(-5px); border-color: rgba(194,107,240,0.5); }
+    .cell::after { content: ""; position: absolute; top: -60px; right: -60px; width: 130px; height: 130px; border-radius: 50%; background: var(--grad); opacity: 0; filter: blur(46px); transition: opacity 0.4s; }
+    .cell:hover::after { opacity: 0.25; }
+    .cell .icon { width: 30px; height: 30px; stroke-width: 1.7; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .cell h3 { font-size: 16.5px; margin: 14px 0 7px; letter-spacing: -0.01em; }
+    .cell p { font-size: 13.5px; line-height: 1.55; color: var(--sub); }
+
+    /* ---------- pipeline player ---------- */
+    .pipe { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 50px auto 0; max-width: 900px; }
+    .stage { font-family: var(--mono); font-size: 13px; padding: 10px 18px; border-radius: 100px; border: 1px solid var(--line); color: var(--sub); position: relative; animation: stageglow 9s infinite; }
+    .stage.you { border-color: rgba(255,95,162,0.5); color: var(--pink); }
+    @keyframes stageglow {
+      0%, 100% { border-color: var(--line); color: var(--sub); box-shadow: none; }
+      4%, 9% { border-color: #c26bf0; color: #fff; box-shadow: 0 0 22px rgba(194,107,240,0.4); }
+    }
+    .stage:nth-child(1) { animation-delay: 0s; } .stage:nth-child(2) { animation-delay: 1s; }
+    .stage:nth-child(3) { animation-delay: 2s; } .stage:nth-child(4) { animation-delay: 3s; }
+    .stage:nth-child(5) { animation-delay: 4s; } .stage:nth-child(6) { animation-delay: 5s; }
+    .stage:nth-child(7) { animation-delay: 6s; } .stage:nth-child(8) { animation-delay: 7s; }
+    .stage:nth-child(9) { animation-delay: 8s; }
+
+    /* ---------- stats count-up ---------- */
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 18px; max-width: 980px; margin: 50px auto 0; text-align: center; }
+    .stat strong { display: block; font-size: clamp(46px, 6vw, 80px); font-weight: 800; letter-spacing: -0.03em; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; font-variant-numeric: tabular-nums; }
+    .stat span { color: var(--sub); font-size: 13.5px; font-family: var(--mono); }
+
+    /* ---------- marquee ---------- */
+    .marquee { overflow: hidden; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 18px 0; background: var(--bg2); }
+    .marquee-track { display: flex; gap: 44px; width: max-content; animation: scroll 30s linear infinite; font-family: var(--mono); font-size: 13.5px; color: var(--sub); white-space: nowrap; }
+    .marquee-track b { color: var(--pink); font-weight: 400; }
+    @keyframes scroll { to { transform: translateX(-50%); } }
+
+    /* ---------- roles ---------- */
+    .roles { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin: 46px auto 0; max-width: 940px; }
+    .role { display: flex; align-items: center; gap: 10px; padding: 12px 20px; border-radius: 14px; background: var(--card); border: 1px solid var(--line); font-size: 14px; transition: transform 0.25s, border-color 0.25s; }
+    .role:hover { transform: translateY(-3px) scale(1.03); }
+    .role i { width: 11px; height: 11px; border-radius: 3px; }
+    .role span { color: var(--sub); font-size: 12px; }
+
+    /* ---------- FAQ ---------- */
+    .faq { max-width: 760px; margin: 46px auto 0; text-align: left; }
+    details { border-bottom: 1px solid var(--line); }
+    summary { cursor: pointer; list-style: none; padding: 20px 4px; font-size: 16.5px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
+    summary::-webkit-details-marker { display: none; }
+    summary::after { content: "+"; font-size: 22px; color: var(--pink); transition: transform 0.25s; }
+    details[open] summary::after { transform: rotate(45deg); }
+    details p { color: var(--sub); font-size: 14.5px; line-height: 1.65; padding: 0 4px 20px; max-width: 640px; }
+
+    /* ---------- closing ---------- */
+    .closing { position: relative; overflow: hidden; padding: 150px 20px; }
+    .closing .watermark { top: 50%; font-size: clamp(140px, 22vw, 360px); }
+    .closing h2 { font-size: clamp(36px, 6vw, 76px); }
+
+    /* footnotes + footer */
+    .footnotes { max-width: 1000px; margin: 0 auto; padding: 40px max(20px, 6vw) 8px; font-size: 11px; color: #6a6a80; line-height: 1.6; }
+    .footnotes p { margin-bottom: 8px; }
+    footer { border-top: 1px solid var(--line); padding: 36px max(20px, 6vw) 46px; font-size: 12.5px; color: var(--sub); }
+    .foot-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 26px; max-width: 1000px; margin: 0 auto; }
+    .foot-cols h4 { font-size: 12px; color: var(--text); margin-bottom: 10px; }
+    .foot-cols a { display: block; padding: 3.5px 0; color: var(--sub); }
+    .foot-cols a:hover { color: #fff; }
+    .foot-legal { max-width: 1000px; margin: 26px auto 0; padding-top: 16px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; }
+    .wordmark { font-weight: 700; }
+    .wordmark .c { font-size: 1.4em; line-height: 0; font-weight: 800; vertical-align: -0.05em; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+    /* reveals */
+    .reveal, .reveal-left, .reveal-right, .reveal-zoom {
+      opacity: 0; will-change: transform, opacity;
+      transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1);
+      transition-delay: var(--d, 0s);
+    }
+    .reveal { transform: translateY(36px); }
+    .reveal-left { transform: translateX(-54px); }
+    .reveal-right { transform: translateX(54px); }
+    .reveal-zoom { transform: translateY(44px) scale(0.94); }
+    .in { opacity: 1 !important; transform: none !important; }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal, .reveal-left, .reveal-right, .reveal-zoom { transition: none; opacity: 1; transform: none; }
+      .stage, .marquee-track, .hero .mark { animation: none !important; }
+    }
+    @media (max-width: 760px) { .mock-body { grid-template-columns: 1fr; } .mock-body .pane:last-child { display: none; } nav .links a:not(.nav-cta) { display: none; } }
+  </style>
 </head>
 <body>
-  <svg width="0" height="0" aria-hidden="true"><defs><linearGradient id="icograd" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff5fa2"/><stop offset="1" stop-color="#a855f7"/></linearGradient></defs></svg>
+  <svg width="0" height="0" aria-hidden="true"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff5fa2"/><stop offset="1" stop-color="#a855f7"/></linearGradient></defs></svg>
 
   <nav aria-label="Main">
-    <a class="nav-logo" href="index.html" aria-label="Colony home">
-      <svg viewBox="0 0 256 256"><circle cx="128" cy="128" r="78" stroke="url(#icograd)" stroke-width="34" stroke-linecap="round" fill="none" stroke-dasharray="368 122" transform="rotate(38 128 128)"/></svg>
+    <a class="logo" href="index.html">
+      <svg viewBox="0 0 256 256"><circle cx="128" cy="128" r="78" stroke="url(#g)" stroke-width="34" stroke-linecap="round" fill="none" stroke-dasharray="368 122" transform="rotate(38 128 128)"/></svg>
+      Colony
     </a>
-    <a href="index.html" class="active">Overview</a>
-    <a href="security.html">Security</a>
-    <a href="start.html">Get Started</a>
-    <a class="nav-cta" href="https://github.com/LEXES7/Colony">Get Colony</a>
+    <div class="links">
+      <a href="#product">Product</a>
+      <a href="#how">How it works</a>
+      <a href="#security">Security</a>
+      <a href="#faq">FAQ</a>
+      <a href="security.html">Threat model</a>
+      <a href="https://github.com/LEXES7/Colony">GitHub</a>
+      <a class="nav-cta" href="start.html">Get Colony</a>
+    </div>
   </nav>
 
-  <div class="ribbon">Colony 1.0 is here — your AI company, free and open source. <a href="start.html">Get started &rsaquo;</a></div>
-
-  <!-- page title, Apple "Mac" style -->
-  <header class="page-head">
-    <h1 class="wordmark"><span class="c">C</span>olony</h1>
+  <!-- ================= HERO ================= -->
+  <header class="hero">
+    <canvas id="dots" aria-hidden="true"></canvas>
+    <div class="watermark" aria-hidden="true">COLONY</div>
+    <svg class="mark" viewBox="0 0 256 256" aria-hidden="true"><circle cx="128" cy="128" r="78" stroke="url(#g)" stroke-width="34" stroke-linecap="round" fill="none" stroke-dasharray="368 122" transform="rotate(38 128 128)"/></svg>
+    <div class="eyebrow">OPEN SOURCE · RUNS ON YOUR MACHINE</div>
+    <h1>The AI company that<br/><em>actually</em> ships.</h1>
+    <p class="sub">Colony staffs a team of AI agents on your computer. They ask, plan, build, review, test and security-audit real software — and nothing happens without your yes.</p>
+    <div class="cta-row">
+      <a class="btn btn-fill" href="start.html">Get started</a>
+      <a class="btn btn-ghost" href="#quick">$ pnpm dev</a>
+    </div>
+    <a class="scrolldown" href="#quick" aria-label="Scroll down">↓</a>
   </header>
 
-  <!-- product chip ribbon -->
-  <div class="chiprow" aria-label="Explore Colony">
-    <a class="chipi" href="#lineup"><span class="ci"><svg class="icon" viewBox="0 0 24 24"><path d="M3 20V9l9-5 9 5v11M9 20v-5h6v5M3 20h18" stroke="url(#icograd)"/></svg></span>The Office</a>
-    <a class="chipi" href="#lineup"><span class="ci"><svg class="icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z" stroke="url(#icograd)"/></svg></span>Chat</a>
-    <a class="chipi" href="#lineup"><span class="ci"><svg class="icon" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01" stroke="url(#icograd)"/></svg></span>Task Boards</a>
-    <a class="chipi" href="#lineup"><span class="ci"><svg class="icon" viewBox="0 0 24 24"><path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-4z" stroke="url(#icograd)"/></svg></span>Security</a>
-    <a class="chipi" href="#lineup"><span class="ci"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2" stroke="url(#icograd)"/><path d="M12 17v4M8 21h8" stroke="url(#icograd)"/></svg></span>Desktop App</a>
-    <a class="chipi" href="#know"><span class="ci"><svg class="icon" viewBox="0 0 24 24"><path d="M13 3L4 14h6l-1 7 9-11h-6l1-7z" stroke="url(#icograd)"/></svg></span>Ventures</a>
-    <a class="chipi" href="security.html"><span class="ci"><svg class="icon" viewBox="0 0 24 24"><path d="M9 12l2 2 4-5M12 22c5-2 8-6 8-11V5l-8-3-8 3v6c0 5 3 9 8 11z" stroke="url(#icograd)"/></svg></span>Threat Model</a>
-    <a class="chipi" href="https://github.com/LEXES7/Colony"><span class="ci"><svg class="icon" viewBox="0 0 24 24"><path d="M12 3a9 9 0 00-3 17.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.2-3.4-1.2-.4-1.1-1-1.4-1-1.4-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5a4 4 0 011-2.7c-.1-.3-.5-1.3.1-2.7 0 0 .9-.3 2.8 1a9.4 9.4 0 015 0c1.9-1.3 2.8-1 2.8-1 .6 1.4.2 2.4.1 2.7a4 4 0 011 2.7c0 3.9-2.4 4.7-4.6 5 .4.3.7.9.7 1.9v2.8c0 .3.2.6.7.5A9 9 0 0012 3z" stroke="url(#icograd)"/></svg></span>GitHub</a>
+  <!-- ================= QUICK START ================= -->
+  <section id="quick" style="padding-top: 70px;">
+    <div class="term-wrap">
+      <div class="kick reveal">Quick start</div>
+      <h2 class="reveal">Two minutes. One company.</h2>
+      <div class="term reveal-zoom" style="margin-top: 34px;">
+        <div class="term-bar">
+          <span class="dots"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></span>
+          colony — zsh
+          <div class="term-tabs">
+            <button class="term-tab on" data-t="dev">Browser</button>
+            <button class="term-tab" data-t="desk">Desktop app</button>
+          </div>
+        </div>
+        <div class="term-body">
+          <button class="copybtn" id="copy">copy</button>
+          <span class="cm"># works on macOS, Linux and Windows. you're the boss now.</span><br/>
+          <span class="pr">$&nbsp;</span><span id="typed"></span><span class="tcursor"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= LIVE DEMO ================= -->
+  <section id="product" class="center" style="padding-top: 60px;">
+    <div class="kick reveal">The dashboard</div>
+    <h2 class="reveal">Chat on the left. A living office<br/>in the middle. Receipts on the right.</h2>
+    <div class="mock reveal-zoom">
+      <div class="mock-bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i><span style="margin-left:8px">Colony — 127.0.0.1</span></div>
+      <div class="mock-body">
+        <div class="pane">
+          <div class="ph">CHAT</div>
+          <div class="bubble you">Let's build an online store</div>
+          <div class="bubble ai">The team has four questions before we commit…</div>
+          <div class="bubble you">Approved — start development</div>
+          <div class="bubble ai">Build underway. Review, testing and a security audit will follow.<span class="tcursor" style="height:11px"></span></div>
+        </div>
+        <div class="pane" style="position:relative">
+          <div class="ph">THE OFFICE</div>
+          <div class="office-mock">
+            <div class="room"><span class="tag">MAIN AGENT</span><div class="desk busy"><span class="screen"></span><span class="body" style="background:#e8c53d"></span></div></div>
+            <div class="room"><span class="tag">WEB TEAM</span>
+              <div class="desk busy"><span class="screen"></span><span class="body" style="background:#5aa7d6"></span></div>
+              <div class="desk"><span class="screen"></span><span class="body" style="background:#b57edc"></span></div>
+            </div>
+            <div class="room"><span class="tag">QA</span><div class="desk"><span class="screen"></span><span class="body" style="background:#7a9c3a"></span></div></div>
+            <div class="room"><span class="tag">SECURITY</span><div class="desk busy"><span class="screen"></span><span class="body" style="background:#c14b4b"></span></div></div>
+          </div>
+          <span class="envelope" aria-hidden="true"></span>
+        </div>
+        <div class="pane">
+          <div class="ph">BOARD</div>
+          <div class="meter"><i></i></div>
+          <div class="brow"><span>Product pages</span><span class="pill g" style="margin-left:auto">done</span></div>
+          <div class="brow"><span>Cart &amp; checkout</span><span class="pill a" style="margin-left:auto">building</span></div>
+          <div class="brow"><span>Order history</span><span class="pill q" style="margin-left:auto">queued</span></div>
+          <div class="brow"><span>Security audit</span><span class="pill q" style="margin-left:auto">queued</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FEATURES ================= -->
+  <section>
+    <div class="kick reveal">Everything included</div>
+    <h2 class="reveal">One hire. Eight superpowers.</h2>
+    <div class="grid">
+      <div class="cell reveal"><svg class="icon" viewBox="0 0 24 24"><path d="M3 20V9l9-5 9 5v11M9 20v-5h6v5M3 20h18" stroke="url(#g)"/></svg><h3>The living office</h3><p>A 3D voxel floor plan — or crisp pixel art. Desks glow, keyboards clatter, envelopes carry messages between rooms in real time.</p></div>
+      <div class="cell reveal"><svg class="icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z" stroke="url(#g)"/></svg><h3>One conversation</h3><p>Plain language in, executive updates out. The main agent runs your teams through real tools — never a wall of code in chat.</p></div>
+      <div class="cell reveal"><svg class="icon" viewBox="0 0 24 24"><path d="M12 3v18M5 8l7-5 7 5" stroke="url(#g)"/></svg><h3>Experts on every repo</h3><p>Point Colony at your projects; each gets a resident expert. Ask how you solved auth last year — get file citations back.</p></div>
+      <div class="cell reveal"><svg class="icon" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01" stroke="url(#g)"/></svg><h3>Boards with receipts</h3><p>Every venture becomes estimated tasks with live countdowns, overdue flags, and honest "took 8m vs eta 10m" receipts.</p></div>
+      <div class="cell reveal"><svg class="icon" viewBox="0 0 24 24"><path d="M9 12l2 2 4-5M12 22c5-2 8-6 8-11V5l-8-3-8 3v6c0 5 3 9 8 11z" stroke="url(#g)"/></svg><h3>Review on everything</h3><p>No task ships unreviewed. QA traces every requirement through real code, and a security audit turns findings into fix tasks.</p></div>
+      <div class="cell reveal"><svg class="icon" viewBox="0 0 24 24"><path d="M13 3L4 14h6l-1 7 9-11h-6l1-7z" stroke="url(#g)"/></svg><h3>Resume anything</h3><p>Usage limits, crashes, closed laptops — everything just pauses. One press of Resume and the team continues where it stopped.</p></div>
+      <div class="cell reveal"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2" stroke="url(#g)"/><path d="M12 17v4M8 21h8" stroke="url(#g)"/></svg><h3>Desktop app</h3><p>Colony in its own native window. The server starts and stops with the app — one command, zero ceremony.</p></div>
+      <div class="cell reveal"><svg class="icon" viewBox="0 0 24 24"><path d="M12 8v4l3 3M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke="url(#g)"/></svg><h3>Live token meters</h3><p>Per-agent usage and cost estimates, always on screen. Cheap models do the routine work; capable ones do the thinking.</p></div>
+    </div>
+  </section>
+
+  <!-- ================= PIPELINE ================= -->
+  <section id="how" class="center" style="background: var(--bg2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);">
+    <div class="kick reveal">How it works</div>
+    <h2 class="reveal">Watch a venture run.</h2>
+    <p class="lead reveal">Nine stops, on a loop below — exactly how it happens in the product. The pink gates wait for you.</p>
+    <div class="pipe reveal">
+      <span class="stage">questions</span>
+      <span class="stage">requirements</span>
+      <span class="stage you">your yes</span>
+      <span class="stage">architecture</span>
+      <span class="stage you">your yes</span>
+      <span class="stage">build + review</span>
+      <span class="stage">testing</span>
+      <span class="stage">security audit</span>
+      <span class="stage">delivery</span>
+    </div>
+  </section>
+
+  <!-- ================= STATS ================= -->
+  <section class="center">
+    <div class="kick reveal">The honest numbers</div>
+    <div class="stats">
+      <div class="stat reveal"><strong data-count="0">0</strong><span>cloud servers</span></div>
+      <div class="stat reveal"><strong data-count="1">0</strong><span>command to install</span></div>
+      <div class="stat reveal"><strong data-count="9">0</strong><span>pipeline stages</span></div>
+      <div class="stat reveal"><strong data-count="100" data-suffix="%">0</strong><span>local &amp; private</span></div>
+    </div>
+  </section>
+
+  <!-- ================= SECURITY ================= -->
+  <section id="security" class="center" style="padding-bottom: 40px;">
+    <div class="kick reveal">Security</div>
+    <h2 class="reveal">Locked down <span class="grad">by design.</span></h2>
+    <p class="lead reveal">Colony assumes hostile websites, poisoned repos and compromised dependencies. Agents get least privilege, always — the worst an attack can do is waste words.</p>
+    <div class="cta-row reveal" style="margin-top: 26px;"><a class="btn btn-ghost" href="security.html">Read the threat model →</a></div>
+  </section>
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track" id="ticker">
+      <span>no shell access <b>·</b></span><span>localhost only <b>·</b></span><span>256-bit token auth <b>·</b></span><span>path-jailed writes <b>·</b></span><span>secrets blocked at tool level <b>·</b></span><span>strict CSP <b>·</b></span><span>rate limited <b>·</b></span><span>zero known CVEs <b>·</b></span><span>no telemetry <b>·</b></span><span>public threat model <b>·</b></span>
+    </div>
   </div>
 
-  <!-- Explore the lineup -->
-  <section class="band" id="lineup" style="padding-top: 60px;">
-    <div class="band-head">
-      <h2 class="big reveal-left">Explore the lineup.</h2>
-      <a class="grey" href="https://github.com/LEXES7/Colony" style="font-size:14px">View on GitHub &rsaquo;</a>
+  <!-- ================= ROLES ================= -->
+  <section class="center">
+    <div class="kick reveal">Staff your team</div>
+    <h2 class="reveal">Pick who's on payroll.</h2>
+    <p class="lead reveal">One click per teammate. Each role gets its own tools, its own permissions, and its own desk in the office.</p>
+    <div class="roles">
+      <div class="role reveal"><i style="background:#e8c53d"></i>Project manager <span>plans &amp; estimates</span></div>
+      <div class="role reveal"><i style="background:#8fb4e3"></i>Architect <span>designs the system</span></div>
+      <div class="role reveal"><i style="background:#5aa7d6"></i>Developer × 2 <span>writes the code</span></div>
+      <div class="role reveal"><i style="background:#b57edc"></i>Reviewer <span>gates every task</span></div>
+      <div class="role reveal"><i style="background:#7a9c3a"></i>QA tester <span>traces requirements</span></div>
+      <div class="role reveal"><i style="background:#c14b4b"></i>Security <span>audits &amp; files fixes</span></div>
+      <div class="role reveal"><i style="background:#d08a2e"></i>DevOps <span>ships &amp; configures</span></div>
     </div>
-    <div class="filters" role="tablist" aria-label="Filter lineup">
-      <button class="filter on" data-cat="all">All</button>
-      <button class="filter" data-cat="surface">Surfaces</button>
-      <button class="filter" data-cat="work">Workflow</button>
-      <button class="filter" data-cat="safety">Safety</button>
-    </div>
-    <div class="shelf-wrap">
-      <div class="shelf" id="lineup-shelf">
-        <div class="scard" data-cat="surface">
-          <div class="art">
-            <span class="ill-glow" style="background:#ff5fa2; top:-70px; left:-40px"></span>
-            <div class="ill-office office-mock" style="height:auto">
-              <div class="room"><span class="tag">TEAM</span><div class="desk busy"><span class="screen"></span><span class="body" style="background:#5aa7d6"></span></div></div>
-              <div class="room"><span class="tag">QA</span><div class="desk"><span class="screen"></span><span class="body" style="background:#7a9c3a"></span></div></div>
-            </div>
-          </div>
-          <div class="body">
-            <span class="kicker">Surface</span>
-            <h3>The Office</h3>
-            <p>A living floor plan of your company. Watch monitors glow and messages fly between rooms while agents work — in 3D or pixel art.</p>
-            <span class="price">Included, like everything.</span>
-            <div class="row"><a class="btn btn-fill" href="start.html">Get</a><a class="btn btn-line" href="#know">Learn more</a></div>
-          </div>
-        </div>
-        <div class="scard" data-cat="surface">
-          <div class="art">
-            <span class="ill-glow" style="background:#a855f7; bottom:-70px; right:-40px"></span>
-            <div class="ill-chat">
-              <div class="bubble you">Let's build an online store</div>
-              <div class="bubble ai">The team has four questions first&hellip;</div>
-            </div>
-          </div>
-          <div class="body">
-            <span class="kicker">Surface</span>
-            <h3>Chat</h3>
-            <p>One conversation runs the whole company. Plain language in, executive updates out — never a wall of code.</p>
-            <span class="price">Your words are the interface.</span>
-            <div class="row"><a class="btn btn-fill" href="start.html">Get</a><a class="btn btn-line" href="#know">Learn more</a></div>
-          </div>
-        </div>
-        <div class="scard" data-cat="work">
-          <div class="art">
-            <div class="ill-board" style="width:66%">
-              <div class="meter"><i></i></div>
-              <div class="row" style="display:flex; padding:6px 0; border-bottom:1px solid #ececf1"><span>Product pages</span><span class="pill g" style="margin-left:auto">done</span></div>
-              <div class="row" style="display:flex; padding:6px 0"><span>Cart &amp; checkout</span><span class="pill a" style="margin-left:auto">building</span></div>
-            </div>
-          </div>
-          <div class="body">
-            <span class="kicker">Workflow</span>
-            <h3>Task Boards</h3>
-            <p>Every venture becomes estimated tasks with live countdowns, honest receipts, and review on every single change.</p>
-            <span class="price">ETAs that mean something.</span>
-            <div class="row"><a class="btn btn-fill" href="start.html">Get</a><a class="btn btn-line" href="#know">Learn more</a></div>
-          </div>
-        </div>
-        <div class="scard" data-cat="work">
-          <div class="art">
-            <span class="ill-glow" style="background:#c26bf0; top:-60px; right:-50px"></span>
-            <div style="position:relative; width:70px; height:70px"><div class="ill-cube"><i></i><i></i></div></div>
-          </div>
-          <div class="body">
-            <span class="kicker">Workflow</span>
-            <h3>Ventures</h3>
-            <p>The full pipeline: questions, requirements, architecture, build, review, testing, security audit, delivery — with your yes at every gate.</p>
-            <span class="price">Seven stages. Zero surprises.</span>
-            <div class="row"><a class="btn btn-fill" href="start.html">Get</a><a class="btn btn-line" href="#know">Learn more</a></div>
-          </div>
-        </div>
-        <div class="scard" data-cat="safety">
-          <div class="art">
-            <div class="ill-shield"><svg class="icon" viewBox="0 0 24 24"><path d="M9 12l2 2 4-5M12 22c5-2 8-6 8-11V5l-8-3-8 3v6c0 5 3 9 8 11z" stroke="url(#icograd)"/></svg></div>
-          </div>
-          <div class="body">
-            <span class="kicker">Safety</span>
-            <h3>Containment</h3>
-            <p>No shell. No network. Path-jailed writing, protected secrets, and a public threat model. Injection can't become execution.</p>
-            <span class="price">Security is the architecture.</span>
-            <div class="row"><a class="btn btn-fill" href="security.html">Learn more</a></div>
-          </div>
-        </div>
-        <div class="scard" data-cat="surface">
-          <div class="art">
-            <div class="ill-window">
-              <div class="wbar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></div>
-              <div class="wline g"></div><div class="wline"></div><div class="wline" style="width:70%"></div>
-            </div>
-          </div>
-          <div class="body">
-            <span class="kicker">Surface</span>
-            <h3>Desktop App</h3>
-            <p>Colony in its own native window. One command opens it, and the server starts and stops with the app.</p>
-            <span class="price">pnpm desktop. That's it.</span>
-            <div class="row"><a class="btn btn-fill" href="start.html">Get</a></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="arrows"><button class="arrow" data-shelf="lineup-shelf" data-dir="-1" aria-label="Scroll left">&lsaquo;</button><button class="arrow" data-shelf="lineup-shelf" data-dir="1" aria-label="Scroll right">&rsaquo;</button></div>
   </section>
 
-  <!-- Why band -->
-  <section class="band" style="padding-top: 20px;">
-    <div class="band-head">
-      <h2 class="big reveal-left">Why Colony is the best way<br/>to run AI agents.</h2>
+  <!-- ================= FAQ ================= -->
+  <section id="faq" class="center" style="background: var(--bg2); border-top: 1px solid var(--line);">
+    <div class="kick reveal">Questions</div>
+    <h2 class="reveal">Asked and answered.</h2>
+    <div class="faq reveal">
+      <details open>
+        <summary>Do I need an API key?</summary>
+        <p>No. If you're signed into Claude Code on your machine, Colony uses that — your existing subscription. Prefer pay-per-token? Drop an ANTHROPIC_API_KEY in .env instead. Either way, your credentials never touch anything but Anthropic.</p>
+      </details>
+      <details>
+        <summary>Is my code sent anywhere?</summary>
+        <p>Only to Anthropic's API for the model calls you trigger, using your own account — the same as using Claude directly. Colony itself has no servers, no accounts and no telemetry. The dashboard is bound to 127.0.0.1 and protected by a local 256-bit token.</p>
+      </details>
+      <details>
+        <summary>Can the agents break my machine?</summary>
+        <p>They can't run shell commands, can't reach the network through tools, and can only write inside the one folder you assign to their team — with symlinks resolved and credential folders denied outright. Secret files like .env and keys are refused at the tool level.</p>
+      </details>
+      <details>
+        <summary>What happens when I hit my usage limit mid-build?</summary>
+        <p>The venture pauses and everything is kept: approvals, finished tasks, the board. When your limit resets, press Resume — the team continues exactly where it stopped. Server crashes and restarts are handled the same way.</p>
+      </details>
+      <details>
+        <summary>How much does it cost?</summary>
+        <p>Colony is free and MIT-licensed. You pay only for your own Claude usage, and the dashboard shows live per-agent token meters so nothing surprises you. Cheap models handle routine work by default.</p>
+      </details>
+      <details>
+        <summary>Can I use it on my real projects?</summary>
+        <p>Yes — that's the point. Register any folder inside your workspace root and it gets an expert agent. Put a team on it when you want changes made. Use git and every change the team makes is reviewable and revertible.</p>
+      </details>
     </div>
-    <div class="shelf-wrap">
-      <div class="shelf" id="why-shelf">
-        <div class="scard"><div class="body" style="padding-top:28px">
-          <span class="kicker">Ownership</span><h3>Your machine. Your data.</h3>
-          <p>No cloud, no accounts, no telemetry. Code and conversations never leave your computer — there is nothing to leak.</p>
-        </div></div>
-        <div class="scard"><div class="body" style="padding-top:28px">
-          <span class="kicker">Control</span><h3>You're the boss.</h3>
-          <p>Nothing gets built without your approval. Requirements and architecture wait for your yes, and every task passes review.</p>
-        </div></div>
-        <div class="scard"><div class="body" style="padding-top:28px">
-          <span class="kicker">Resilience</span><h3>Nothing is ever lost.</h3>
-          <p>Usage limit? Crash? Closed your laptop? One press of Resume and the team picks up exactly where it stopped.</p>
-        </div></div>
-        <div class="scard"><div class="body" style="padding-top:28px">
-          <span class="kicker">Cost</span><h3>Free, and frugal.</h3>
-          <p>Open source under MIT. Cheap models do the routine work, capable ones do the thinking, and live meters show every token.</p>
-        </div></div>
-      </div>
-    </div>
-    <div class="arrows"><button class="arrow" data-shelf="why-shelf" data-dir="-1" aria-label="Scroll left">&lsaquo;</button><button class="arrow" data-shelf="why-shelf" data-dir="1" aria-label="Scroll right">&rsaquo;</button></div>
   </section>
 
-  <!-- Get to know Colony — dark cards -->
-  <section class="band dark-band" id="know" style="padding-top: 20px;">
-    <div class="band-head">
-      <h2 class="big reveal-left">Get to know Colony.</h2>
-    </div>
-    <div class="shelf-wrap">
-      <div class="shelf" id="know-shelf">
-        <div class="scard dark-card">
-          <div class="art">
-            <span class="ill-glow" style="background:#ff5fa2; top:-60px; left:30%"></span>
-            <div class="ill-chat" style="width:76%">
-              <div class="bubble you" style="background:#2b3446; color:#dfe5ee">Approved — start development</div>
-              <div class="bubble ai" style="background:#1a1e2b; border-color:#242a3b; color:#b8c0cf">Build underway.<span class="caret"></span></div>
-            </div>
-          </div>
-          <div class="body"><span class="kicker">How it works</span><h3>Say it. They build it.</h3>
-          <p>Describe the goal in plain words. The team plans, asks, builds, reviews, tests and audits — pausing for your yes at every gate.</p></div>
-        </div>
-        <div class="scard dark-card">
-          <div class="art">
-            <div class="office-mock" style="width:78%; height:72%">
-              <div class="room"><span class="tag" style="background:#101013">MAIN</span><div class="desk busy"><span class="screen"></span><span class="body" style="background:#e8c53d"></span></div></div>
-              <div class="room" style="position:relative"><span class="tag" style="background:#101013">TEAM</span><div class="desk busy"><span class="screen"></span><span class="body" style="background:#5aa7d6"></span></div><span class="envelope" style="animation-duration:3.4s"></span></div>
-            </div>
-          </div>
-          <div class="body"><span class="kicker">The office</span><h3>Alive while it works.</h3>
-          <p>Glowing monitors, flying messages, a desk for every agent. You always know exactly who is doing what.</p></div>
-        </div>
-        <div class="scard dark-card">
-          <div class="art">
-            <span class="ill-glow" style="background:#a855f7; bottom:-70px; left:-30px"></span>
-            <div class="ill-shield"><svg class="icon" viewBox="0 0 24 24" style="stroke-width:1.4"><path d="M9 12l2 2 4-5M12 22c5-2 8-6 8-11V5l-8-3-8 3v6c0 5 3 9 8 11z" stroke="url(#icograd)"/></svg></div>
-          </div>
-          <div class="body"><span class="kicker">Security</span><h3>Locked down. By design.</h3>
-          <p>Agents can't run commands, can't leave their folders, can't read secrets. The worst an attack can do is waste words.</p></div>
-        </div>
-        <div class="scard dark-card">
-          <div class="art">
-            <div class="ill-board" style="width:70%; color:#a1a1a6">
-              <div class="meter" style="background:#1a1e2b"><i></i></div>
-              <div style="display:flex; padding:6px 0; border-bottom:1px solid #1a1e2b"><span>Build the storefront</span><span class="pill a" style="margin-left:auto">resumed</span></div>
-              <div style="display:flex; padding:6px 0"><span>Security audit</span><span class="pill" style="margin-left:auto; border:1px solid #2a3145">queued</span></div>
-            </div>
-          </div>
-          <div class="body"><span class="kicker">Resilience</span><h3>Resume anything.</h3>
-          <p>Limits, crashes and restarts just pause the work. Your approvals and finished tasks survive everything.</p></div>
-        </div>
-      </div>
-    </div>
-    <div class="arrows"><button class="arrow" data-shelf="know-shelf" data-dir="-1" aria-label="Scroll left">&lsaquo;</button><button class="arrow" data-shelf="know-shelf" data-dir="1" aria-label="Scroll right">&rsaquo;</button></div>
-  </section>
-
-  <!-- closing statement -->
-  <section class="center" style="padding-top: 70px; padding-bottom: 110px;">
-    <h2 class="big reveal">Ready to hire your first team?</h2>
-    <p class="lead reveal">Two minutes from clone to company.</p>
+  <!-- ================= CLOSING ================= -->
+  <section class="closing center">
+    <div class="watermark" aria-hidden="true">HIRED</div>
+    <div class="kick reveal">Ready?</div>
+    <h2 class="reveal">Your company is<br/><em style="font-family:Georgia,serif; font-weight:500" class="grad">one command away.</em></h2>
     <div class="cta-row reveal">
-      <a class="btn btn-fill" href="start.html">Get started</a>
-      <a class="btn btn-line" href="https://github.com/LEXES7/Colony">View on GitHub</a>
+      <a class="btn btn-fill" href="start.html">Get started free</a>
+      <a class="btn btn-ghost" href="https://github.com/LEXES7/Colony">Star it on GitHub</a>
     </div>
   </section>
 
@@ -265,31 +447,93 @@
   </footer>
 
   <script>
-    // reveal on scroll
+    // ---- reveal on scroll (staggered groups) ----
     const io = new IntersectionObserver((es) => {
       for (const e of es) if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
-    }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
+    }, { threshold: 0.1, rootMargin: "0px 0px -6% 0px" });
     document.querySelectorAll(".reveal, .reveal-left, .reveal-right, .reveal-zoom").forEach((el) => io.observe(el));
-
-    // shelf arrows
-    document.querySelectorAll(".arrow").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const shelf = document.getElementById(btn.dataset.shelf);
-        shelf.scrollBy({ left: Number(btn.dataset.dir) * 380, behavior: "smooth" });
-      });
+    document.querySelectorAll(".grid, .roles, .pipe").forEach((g) => {
+      [...g.children].forEach((c, i) => c.style.setProperty("--d", `${Math.min(i * 0.06, 0.5)}s`));
     });
 
-    // lineup filters
-    document.querySelectorAll(".filter").forEach((f) => {
-      f.addEventListener("click", () => {
-        document.querySelectorAll(".filter").forEach((x) => x.classList.remove("on"));
-        f.classList.add("on");
-        const cat = f.dataset.cat;
-        document.querySelectorAll("#lineup-shelf .scard").forEach((card) => {
-          card.classList.toggle("hidden", cat !== "all" && card.dataset.cat !== cat);
-        });
+    // ---- hero dot matrix: drifting grid with colony-colored workers ----
+    const cv = document.getElementById("dots");
+    const cx = cv.getContext("2d");
+    const motionOK = !matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let W, H, pts;
+    const palette = ["#ff5fa2", "#a855f7", "#5aa7d6", "#4cc38a", "#e8c53d"];
+    function seed() {
+      W = cv.width = cv.offsetWidth * devicePixelRatio;
+      H = cv.height = cv.offsetHeight * devicePixelRatio;
+      const gap = 26 * devicePixelRatio;
+      pts = [];
+      for (let y = gap; y < H; y += gap)
+        for (let x = gap; x < W; x += gap)
+          if (Math.random() > 0.55)
+            pts.push({ x, y, r: Math.random() * 1.3 + 0.4, p: Math.random() * 6.28, c: Math.random() > 0.965 ? palette[(Math.random() * palette.length) | 0] : null });
+    }
+    function drawDots(t) {
+      cx.clearRect(0, 0, W, H);
+      for (const p of pts) {
+        const a = 0.10 + 0.09 * Math.sin(t / 1400 + p.p);
+        cx.globalAlpha = p.c ? 0.75 : a;
+        cx.fillStyle = p.c || "#ffffff";
+        const dy = motionOK ? Math.sin(t / 2000 + p.p) * 2 * devicePixelRatio : 0;
+        cx.beginPath();
+        cx.arc(p.x, p.y + dy, p.r * devicePixelRatio, 0, 6.28);
+        cx.fill();
+      }
+      if (motionOK) requestAnimationFrame(drawDots);
+    }
+    seed(); requestAnimationFrame(drawDots);
+    addEventListener("resize", seed);
+
+    // ---- typed terminal ----
+    const CMDS = {
+      dev: "git clone https://github.com/LEXES7/Colony.git && cd Colony && pnpm install && pnpm dev",
+      desk: "git clone https://github.com/LEXES7/Colony.git && cd Colony && pnpm install && pnpm desktop",
+    };
+    const typed = document.getElementById("typed");
+    let mode = "dev", ti = 0, timer;
+    function type() {
+      const s = CMDS[mode];
+      typed.textContent = s.slice(0, ti);
+      if (ti <= s.length) { ti += 1; timer = setTimeout(type, ti < 4 ? 220 : 26); }
+      else timer = setTimeout(() => { ti = 0; type(); }, 6000);
+    }
+    type();
+    document.querySelectorAll(".term-tab").forEach((tab) => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll(".term-tab").forEach((x) => x.classList.remove("on"));
+        tab.classList.add("on");
+        mode = tab.dataset.t; ti = 0; clearTimeout(timer); type();
       });
     });
+    document.getElementById("copy").addEventListener("click", async (e) => {
+      await navigator.clipboard.writeText(CMDS[mode]);
+      e.target.textContent = "copied"; setTimeout(() => (e.target.textContent = "copy"), 1500);
+    });
+
+    // ---- count-up stats ----
+    const cio = new IntersectionObserver((es) => {
+      for (const e of es) {
+        if (!e.isIntersecting) continue;
+        cio.unobserve(e.target);
+        const el = e.target, target = Number(el.dataset.count), suffix = el.dataset.suffix || "";
+        const t0 = performance.now();
+        const tick = (t) => {
+          const f = Math.min((t - t0) / 1200, 1);
+          el.textContent = Math.round(target * (1 - Math.pow(1 - f, 3))) + suffix;
+          if (f < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      }
+    }, { threshold: 0.6 });
+    document.querySelectorAll("[data-count]").forEach((el) => cio.observe(el));
+
+    // ---- duplicate marquee for seamless loop ----
+    const ticker = document.getElementById("ticker");
+    ticker.innerHTML += ticker.innerHTML;
   </script>
 </body>
 </html>
