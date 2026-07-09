@@ -51,13 +51,14 @@
 
     /* ---------- hero ---------- */
     .hero { position: relative; min-height: 88vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 80px 20px 40px; overflow: hidden; }
-    #dots { position: absolute; inset: 0; width: 100%; height: 100%; }
+    #dots { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; }
     .watermark {
-      position: absolute; left: 50%; top: 60%; transform: translate(-50%, -50%);
-      font-size: clamp(130px, 21vw, 330px); font-weight: 800; letter-spacing: -0.04em;
-      color: rgba(255,255,255,0.025); pointer-events: none; white-space: nowrap; user-select: none;
+      position: absolute; left: 50%; top: 92px; transform: translateX(-50%);
+      font-size: clamp(120px, 19vw, 300px); font-weight: 800; letter-spacing: -0.04em;
+      line-height: 1; color: rgba(255,255,255,0.028); pointer-events: none; white-space: nowrap; user-select: none;
+      z-index: 0;
     }
-    .hero > * { position: relative; }
+    .hero > * { position: relative; z-index: 2; }
     .hero .mark { width: 60px; height: 60px; filter: drop-shadow(0 0 34px rgba(194,107,240,0.5)); animation: float 5s ease-in-out infinite; }
     @keyframes float { 50% { transform: translateY(-9px); } }
     .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.32em; color: var(--pink); margin-top: 18px; }
@@ -481,27 +482,34 @@
       mouse.y = (e.clientY - r.top) * devicePixelRatio;
     });
     heroEl.addEventListener("pointerleave", () => { mouse.x = mouse.y = -9999; });
-    const SPOT = 150; // spotlight radius in CSS px
+    const SPOT = 170; // spotlight radius in CSS px
+    const spot = { x: -9999, y: -9999 }; // eased position trailing the cursor
     function drawDots(t) {
       cx.clearRect(0, 0, W, H);
       const R = SPOT * devicePixelRatio;
-      // soft glow that follows the cursor
+      // warm spotlight that glides after the cursor
       if (mouse.x > 0) {
-        const g = cx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, R * 1.35);
-        g.addColorStop(0, "rgba(194,107,240,0.10)");
-        g.addColorStop(1, "rgba(194,107,240,0)");
+        if (spot.x < 0) { spot.x = mouse.x; spot.y = mouse.y; }
+        spot.x += (mouse.x - spot.x) * 0.14;
+        spot.y += (mouse.y - spot.y) * 0.14;
+      } else { spot.x = spot.y = -9999; }
+      if (spot.x > 0) {
+        const g = cx.createRadialGradient(spot.x, spot.y, 0, spot.x, spot.y, R * 1.4);
+        g.addColorStop(0, "rgba(255,214,110,0.16)");
+        g.addColorStop(0.45, "rgba(255,200,90,0.07)");
+        g.addColorStop(1, "rgba(255,200,90,0)");
         cx.globalAlpha = 1;
         cx.fillStyle = g;
-        cx.fillRect(mouse.x - R * 1.35, mouse.y - R * 1.35, R * 2.7, R * 2.7);
+        cx.fillRect(spot.x - R * 1.4, spot.y - R * 1.4, R * 2.8, R * 2.8);
       }
       for (const p of pts) {
         const dy = motionOK ? Math.sin(t / 2000 + p.p) * 2 * devicePixelRatio : 0;
-        const dx = p.x - mouse.x, dyy = p.y + dy - mouse.y;
+        const dx = p.x - spot.x, dyy = p.y + dy - spot.y;
         const d = Math.hypot(dx, dyy);
         const near = d < R ? 1 - d / R : 0; // 0..1 inside the spotlight
         const a = 0.10 + 0.09 * Math.sin(t / 1400 + p.p);
         cx.globalAlpha = p.c ? Math.min(1, 0.75 + near * 0.25) : Math.min(1, a + near * 0.55);
-        cx.fillStyle = near > 0 && !p.c ? "#e8d9ff" : (p.c || "#ffffff");
+        cx.fillStyle = near > 0 && !p.c ? "#ffe9b8" : (p.c || "#ffffff");
         cx.beginPath();
         cx.arc(p.x, p.y + dy, p.r * devicePixelRatio * (1 + near * 0.9), 0, 6.28);
         cx.fill();
